@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,12 +45,10 @@ namespace Aula_3_Atividade_Matriz4
 
             Console.Write("Quantos produtos deseja calcular o lucro? ");
             quantidadeProdutos = Convert.ToInt32(Console.ReadLine());
+            Console.Clear();
 
             string[] produtos = new string[quantidadeProdutos];
-            int[] quantidadeVenda = new int[quantidadeProdutos];
-            double[] precoCompra = new double[quantidadeProdutos];
-            double[] precoVenda = new double[quantidadeProdutos];
-            double lucroTotal = 0;
+            double[] lucroProduto = new double[quantidadeProdutos]; 
 
             for (int i = 0; i < quantidadeProdutos; i++)
             {
@@ -57,30 +56,29 @@ namespace Aula_3_Atividade_Matriz4
                 produtos[i] = Console.ReadLine();
 
                 Console.Write($"Informe o preço de compra de {produtos[i]}: ");
-                precoCompra[i] = Convert.ToDouble(Console.ReadLine());
+                double precoCompra = Convert.ToDouble(Console.ReadLine());
 
                 Console.Write($"Informe o preço de venda de {produtos[i]}: ");
-                precoVenda[i] = Convert.ToDouble(Console.ReadLine());
+                double precoVenda = Convert.ToDouble(Console.ReadLine());
 
                 Console.Write($"Informe a quantidade vendida de {produtos[i]}: ");
-                quantidadeVenda[i] = Convert.ToInt32(Console.ReadLine());
+                double quantidadeVenda = Convert.ToInt32(Console.ReadLine());
+
+                lucroProduto[i] = quantidadeVenda * (precoVenda - precoCompra);
 
                 Console.WriteLine("");
             }
 
+            double lucroTotal = 0;
             Console.WriteLine("Lucro por produto: " + Environment.NewLine);
 
             for (int i = 0; i < quantidadeProdutos; i++)
-            {
-                double lucro = quantidadeVenda[i] * (precoVenda[i] - precoCompra[i]);
-                lucroTotal += lucro;
-                Console.WriteLine($"{produtos[i]}: {lucro}");
+            {              
+                Console.WriteLine($"{produtos[i]}: {lucroProduto[i]}");
             }
 
             Console.WriteLine("");
             Console.WriteLine($"Lucro total: {lucroTotal}");
-
         }
-
     }
 }
