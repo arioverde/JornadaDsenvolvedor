@@ -8,17 +8,8 @@ namespace Aula_3_Atividade_Matriz4
 {
     public class LucroProdutos
     {
-        private string[] Produto = new string[3];
-        private int[] QuantidadeVenda = new int[3];
-        private double[] PrecoCompra = new double[3];
-        private double[] PrecoVenda = new double[3];
-
         public void Executar()
         {
-            Produto[0] = "Ração";
-            Produto[1] = "Petisco";
-            Produto[2] = "Shampoo";
-
             ExibeCabecalho();
             Menu();
         }
@@ -39,7 +30,6 @@ namespace Aula_3_Atividade_Matriz4
             if (opcao == 1)
             {
                 SolicitaDadosVenda();
-                ExibeLucro();
             }
             else if (opcao == 2)
             {
@@ -50,47 +40,47 @@ namespace Aula_3_Atividade_Matriz4
         }
         private void SolicitaDadosVenda()
         {
-            for (int i = 0; i < 3; i++)
+            int quantidadeProdutos;
+
+            Console.Write("Quantos produtos deseja calcular o lucro? ");
+            quantidadeProdutos = Convert.ToInt32(Console.ReadLine());
+
+            string[] produtos = new string[quantidadeProdutos];
+            int[] quantidadeVenda = new int[quantidadeProdutos];
+            double[] precoCompra = new double[quantidadeProdutos];
+            double[] precoVenda = new double[quantidadeProdutos];
+            double lucroTotal = 0;
+
+            for (int i = 0; i < quantidadeProdutos; i++)
             {
-                Console.Write($"Informe o preço de compra de {Produto[i]}: ");
-                PrecoCompra[i] = Convert.ToDouble(Console.ReadLine());
+                Console.Write($"Informe o nome do {i + 1}º produto: ");
+                produtos[i] = Console.ReadLine();
 
-                Console.Write($"Informe o preço de venda de {Produto[i]}: ");
-                PrecoVenda[i] = Convert.ToDouble(Console.ReadLine());
+                Console.Write($"Informe o preço de compra de {produtos[i]}: ");
+                precoCompra[i] = Convert.ToDouble(Console.ReadLine());
 
-                Console.Write($"Informe a quantidade vendida de {Produto[i]}: ");
-                QuantidadeVenda[i] = Convert.ToInt32(Console.ReadLine());
+                Console.Write($"Informe o preço de venda de {produtos[i]}: ");
+                precoVenda[i] = Convert.ToDouble(Console.ReadLine());
+
+                Console.Write($"Informe a quantidade vendida de {produtos[i]}: ");
+                quantidadeVenda[i] = Convert.ToInt32(Console.ReadLine());
 
                 Console.WriteLine("");
             }
-        }
-        private void ExibeLucro()
-        {
-            double totalCompra, totalVenda, lucroBruto, valorImposto, lucroLiquido, lucroTotal = 0;
-            double[] lucroProduto = new double[3];
 
-            for (int i = 0; i < 3; i++)
-            {                            
-                totalCompra = QuantidadeVenda[i] * PrecoCompra[i];
-                totalVenda = QuantidadeVenda[i] * PrecoVenda[i];
-                lucroBruto = totalVenda - totalCompra;
-                valorImposto = lucroBruto * 0.15;
-                lucroLiquido = lucroBruto - valorImposto;
-                lucroProduto[i] = lucroLiquido;
-                lucroTotal = lucroTotal + lucroProduto[i];
-            }
+            Console.WriteLine("Lucro por produto: " + Environment.NewLine);
 
-            Console.Clear();
-            Console.WriteLine("Lucro por produto vendido (Descontado imposto de 15%):");
-            Console.WriteLine("");
-
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < quantidadeProdutos; i++)
             {
-                Console.WriteLine($"{Produto[i]}: {lucroProduto[i]}");             
+                double lucro = quantidadeVenda[i] * (precoVenda[i] - precoCompra[i]);
+                lucroTotal += lucro;
+                Console.WriteLine($"{produtos[i]}: {lucro}");
             }
 
             Console.WriteLine("");
             Console.WriteLine($"Lucro total: {lucroTotal}");
+
         }
+
     }
 }
