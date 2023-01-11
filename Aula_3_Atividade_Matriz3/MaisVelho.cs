@@ -8,13 +8,13 @@ namespace Aula_3_Atividade_Matriz3
 {
     public class MaisVelho
     {
-        private int[] Idades = new int[10];
-        private string?[] Nomes = new string[10];
+        public List<Pessoa> Pessoas = new List<Pessoa>();
+
         public void Executar()
         {
             ExibeCabecalho();
-            SolicitaNomeIdade();
-            ApresentaMaisVelho();
+            List<Pessoa> pessoas = SolicitaNomeIdade();
+            ApresentaMaisVelho(pessoas);
         }
         private void ExibeCabecalho()
         {
@@ -22,32 +22,34 @@ namespace Aula_3_Atividade_Matriz3
             Console.WriteLine("Mostra o mais velho(a) de um grupo de 10 pessoas");
             Console.WriteLine("************************************************");
         }
-        private void SolicitaNomeIdade()
+        private List<Pessoa> SolicitaNomeIdade()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 3; i++)
             {
+                Pessoa pessoa = new Pessoa();
+
                 Console.Write($"Informe o nome da {i + 1}ª pessoa: ");
-                Nomes[i] = Console.ReadLine();
+                pessoa.Nome = Console.ReadLine();
 
                 Console.Write($"Informe a idade: ");
-                Idades[i] = Convert.ToInt32(Console.ReadLine());
+                pessoa.Idade = Convert.ToInt32(Console.ReadLine());
 
-                Console.WriteLine("");
+                Pessoas.Add(pessoa);
             }
+            return Pessoas;
         }
-        private void ApresentaMaisVelho()
-        {
-            int comparaIdade = Idades[0], idadeMaisVelho;
-            string? nomeMaisVelho = Nomes[0];
+           private void ApresentaMaisVelho(List<Pessoa> pessoas)
+           {
+            int comparaIdade = pessoas[0].Idade, idadeMaisVelho;
+            string? nomeMaisVelho = pessoas[0].Nome;
 
-            for (int i = 0; i < 10; i++)
+            foreach (var pessoa in pessoas)
             {
-                if (comparaIdade <= Idades[i])
+                if (comparaIdade <= pessoa.Idade)
                 {
-                    idadeMaisVelho = Idades[i];
-                    nomeMaisVelho = Nomes[i];
-                    comparaIdade = Idades[i];
-                }                
+                    nomeMaisVelho = pessoa.Nome;
+                    comparaIdade = pessoa.Idade;
+                }
             }
             Console.WriteLine($"O(A) mais velho(a) é {nomeMaisVelho}");
         }
