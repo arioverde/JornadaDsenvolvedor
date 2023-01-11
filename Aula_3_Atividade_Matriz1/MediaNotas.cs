@@ -31,21 +31,28 @@ namespace Aula_3_Atividade_Matriz1
 
             while (true)
             {
-                Console.WriteLine("1 - Cadastrar Notas");
-                Console.WriteLine("2 - Finalizar");
+                Console.WriteLine("Informe a nota ou digite PARE para finalizar");
+                var opcao = Console.ReadLine();
 
-                var opcao = Convert.ToInt16(Console.ReadLine());
-                if (opcao == 2)
+                if (opcao.Trim().ToUpper() == "PARE")
                     break;
 
-                var aluno = new Aluno();
+                var seValorCorreto = ValidarSeNumeroFloat(opcao);
+               
+                if (!seValorCorreto)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Número inválido, tecle <Enter> para tentar novamente.");
+                    Console.ReadKey();
+                    continue;
+                }             
+                    var aluno = new Aluno();
 
-                Console.Write("Informe a NOTA: ");
-                aluno.Nota = Convert.ToInt16(Console.ReadLine());
-                Console.Write("Informe o NOME do aluno: ");
-                aluno.Nome = Console.ReadLine();
+                    aluno.Nota = Convert.ToDouble(opcao);
+                    Console.Write("Informe o NOME do aluno: ");
+                    aluno.Nome = Console.ReadLine();
 
-                alunos.Add(aluno);
+                    alunos.Add(aluno);
 
                 Console.Clear();
             }
@@ -53,7 +60,7 @@ namespace Aula_3_Atividade_Matriz1
         }
         private void ExibeMediaNotas(List<Aluno> alunos)
         {
-            var somaNotas = 0F;
+            var somaNotas = 0.0;
             foreach (var aluno in alunos)
             {
                 Console.Write($"{aluno.Nome}: {aluno.Nota}" + Environment.NewLine);
@@ -61,6 +68,21 @@ namespace Aula_3_Atividade_Matriz1
             }
 
             Console.WriteLine($"A média das notas é {somaNotas / alunos.Count}");
+        }
+        private bool ValidarSeNumeroFloat(string texto)
+        {
+            if (string.IsNullOrWhiteSpace(texto))
+                return false;
+
+            if (texto.Contains("."))
+                return false;
+
+            var isDouble = double.TryParse(texto, out _);
+
+            if (!isDouble)
+                return false;
+
+            return true;              
         }
     }
 }

@@ -9,6 +9,6 @@ namespace Aula_3_Atividade_Matriz1
     public class Aluno
     {
         public string? Nome { get; set; }    
-        public float Nota { get; set; }
+        public double Nota { get; set; }
     }
 }
