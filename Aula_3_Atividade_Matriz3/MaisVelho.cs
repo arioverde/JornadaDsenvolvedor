@@ -8,8 +8,6 @@ namespace Aula_3_Atividade_Matriz3
 {
     public class MaisVelho
     {
-        public List<Pessoa> Pessoas = new List<Pessoa>();
-
         public void Executar()
         {
             ExibeCabecalho();
@@ -24,7 +22,9 @@ namespace Aula_3_Atividade_Matriz3
         }
         private List<Pessoa> SolicitaNomeIdade()
         {
-            for (int i = 0; i < 3; i++)
+            List<Pessoa> Pessoas = new List<Pessoa>();
+
+            for (int i = 0; i < 10; i++)
             {
                 Pessoa pessoa = new Pessoa();
 
@@ -38,19 +38,22 @@ namespace Aula_3_Atividade_Matriz3
             }
             return Pessoas;
         }
-           private void ApresentaMaisVelho(List<Pessoa> pessoas)
-           {
-            int comparaIdade = pessoas[0].Idade, idadeMaisVelho;
-            string? nomeMaisVelho = pessoas[0].Nome;
+        private void ApresentaMaisVelho(List<Pessoa> pessoas)
+        {
+            int comparaIdade = 0;
+            string nomeMaisVelho = "";
 
             foreach (var pessoa in pessoas)
             {
-                if (comparaIdade <= pessoa.Idade)
+                if (comparaIdade < pessoa.Idade)
                 {
                     nomeMaisVelho = pessoa.Nome;
                     comparaIdade = pessoa.Idade;
                 }
             }
+            // o código acima poderia ser resumido em apenas uma linha, com expressão lambda:
+            // Console.WriteLine($"O(A) mais velho(a) é {pessoas.OrderByDescending(x => x.Nome).First().Nome}");
+
             Console.WriteLine($"O(A) mais velho(a) é {nomeMaisVelho}");
         }
     }
