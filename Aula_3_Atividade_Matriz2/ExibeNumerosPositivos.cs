@@ -8,39 +8,38 @@ namespace Aula_3_Atividade_Matriz2
 {
     public class ExibeNumerosPositivos
     {
-        int[] numeros = new int[15];
         public void Executar()
         {
             ExibeCabecalho();
-            SolicitaNumeros();
-            ApresentaSomentePositivos();
-        }       
+            var numeros = SolicitaNumeros();
+            ApresentaSomentePositivos(numeros);
+        }
         private void ExibeCabecalho()
         {
             Console.WriteLine("******************************************************");
             Console.WriteLine("*** Recebe 15 números e exibe somente os positivos ***");
             Console.WriteLine("******************************************************");
         }
-        private void SolicitaNumeros()
+        private List<int> SolicitaNumeros()
         {
-            int numero;
+            var numeros = new List<int>();
 
             for (int i = 0; i < 15; i++)
             {
-                Console.WriteLine($"Informe o {i+1}º número:");
-                numero = Convert.ToInt32(Console.ReadLine());
-                numeros[i] = numero;
-
+                Console.WriteLine($"Informe o {i + 1}º número:");
+                numeros.Add(Convert.ToInt32(Console.ReadLine()));
             }
+
+            return numeros;
         }
-        private void ApresentaSomentePositivos()
+        private void ApresentaSomentePositivos(List<int> numeros)
         {
             Console.WriteLine("Os números positivos são:");
-            for (int i = 0; i < 15; i++)
+            foreach (var numero in numeros)
             {
-                if (numeros[i] < 0)
+                if (numero < 0)
                     continue;
-                Console.WriteLine(numeros[i]);
+                Console.WriteLine(numero);
             }
         }
     }
