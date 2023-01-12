@@ -11,8 +11,8 @@ namespace PetShop.Modelos
     {
         
         public string Nome { get; set; }
-        public long CPF { get; set; }    
-        public DateTime Aniversario { get; set;}
+        public string CPF { get; set; }    
+        public DateTime Nascimento { get; set;}
     }
    
 }

@@ -7,7 +7,10 @@ namespace PetShop
         static void Main(string[] args)
         {
             var clienteRepositorio = new ClienteRepositorio();
-            clienteRepositorio.Listar();
+
+            //clienteRepositorio.Cadastro();
+            clienteRepositorio.AniversariantesMes();
+
 
         }
     }

@@ -17,10 +17,23 @@ namespace PetShop.Repositorios
         public ClienteRepositorio()
         {
             if (!File.Exists(_caminhoArquivo))
-                File.Create(_caminhoArquivo);
+            {
+                var file = File.Create(_caminhoArquivo);
+                file.Close();
+            }
         }
         public void Cadastro()
         {
+            StreamWriter sw = new StreamWriter(_caminhoArquivo, true);
+            var cliente = new Cliente();
+            string nome = "Carlos Santana3";
+            string CPF = "45697868598";
+            var nascimento = new DateTime(1965, 09, 15);
+
+            string registro = $"{nome};{CPF};{nascimento}";
+
+            sw.WriteLine(registro);
+            sw.Close();
 
         }
         private void Leitura()
@@ -34,8 +47,8 @@ namespace PetShop.Repositorios
                 var colunas = linha.Split(';');
                 var cliente = new Cliente();
                 cliente.Nome = colunas[0];
-                cliente.CPF = Convert.ToInt64(colunas[1]);
-                cliente.Aniversario = Convert.ToDateTime(colunas[2]);
+                cliente.CPF = colunas[1];
+                cliente.Nascimento = Convert.ToDateTime(colunas[2]);
 
                 clientes.Add(cliente);
             }
@@ -48,20 +61,56 @@ namespace PetShop.Repositorios
             {
                 Console.WriteLine(cliente.Nome.ToUpper());
                 Console.WriteLine(cliente.CPF);
-                Console.WriteLine(cliente.Aniversario);
+                Console.WriteLine(cliente.Nascimento.ToString(format: "dd/MM/yyyy"));
                 Console.WriteLine("");
-
             }
         }
-        public void PorCPF(long CPF)
+        public void ExibePorCPF(string CPF)
+        {
+            var cliente = new Cliente();
+
+            if ((cliente = BuscaPorCPF(CPF)) == null)
+                Console.WriteLine("CPF não cadastrado");
+            else
+            {
+                Console.WriteLine(cliente.Nome.ToUpper());
+                Console.WriteLine(cliente.CPF);
+                Console.WriteLine(cliente.Nascimento);
+            }
+        }
+        private Cliente BuscaPorCPF(string CPF)
         {
             Leitura();
-            clientes.Contains(x)
-
+            foreach (var cliente in clientes)
+            {
+                if (cliente.CPF == CPF)
+                    return cliente;
+            }
+            return null;
         }
         public void AniversariantesMes()
         {
             Leitura();
+            Console.WriteLine("Aniversariantes do mês: ");
+            Console.WriteLine("=======================");
+
+            clientes = clientes.OrderBy(x => x.Nascimento.Day).ToList();
+
+            int count = 0;
+            int idade;
+            foreach (var cliente in clientes)
+            {                            
+                if (cliente.Nascimento.Month == DateTime.Now.Month)
+                {
+                    // impreciso. Revisar.
+                    idade = DateTime.Now.Year - cliente.Nascimento.Year;
+                    Console.WriteLine($"Dia {cliente.Nascimento.Day} - {cliente.Nome.ToUpper()} - {idade} anos");
+                    count++;
+                }
+            }
+            if (count == 0)
+                Console.WriteLine("Não há aniversariantes no mês corrente.");
         }
     }
 }
+
