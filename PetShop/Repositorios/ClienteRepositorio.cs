@@ -22,15 +22,11 @@ namespace PetShop.Repositorios
                 file.Close();
             }
         }
-        public void Cadastro()
+        public void Inserir(Cliente cliente)
         {
-            StreamWriter sw = new StreamWriter(_caminhoArquivo, true);
-            var cliente = new Cliente();
-            string nome = "Carlos Santana3";
-            string CPF = "45697868598";
-            var nascimento = new DateTime(1965, 09, 15);
-
-            string registro = $"{nome};{CPF};{nascimento}";
+            var sw = new StreamWriter(_caminhoArquivo, true);
+         
+            string registro = $"{cliente.Nome};{cliente.CPF};{cliente.Nascimento}";
 
             sw.WriteLine(registro);
             sw.Close();
@@ -38,7 +34,7 @@ namespace PetShop.Repositorios
         }
         private void Leitura()
         {
-            StreamReader sr = new StreamReader(_caminhoArquivo);
+            var sr = new StreamReader(_caminhoArquivo);
             string? linha;
             clientes.Clear();
 
@@ -102,8 +98,11 @@ namespace PetShop.Repositorios
             {                            
                 if (cliente.Nascimento.Month == DateTime.Now.Month)
                 {
-                    // impreciso. Revisar.
                     idade = DateTime.Now.Year - cliente.Nascimento.Year;
+                    
+                    if (DateTime.Now.DayOfYear < cliente.Nascimento.DayOfYear)
+                        idade --;
+                    
                     Console.WriteLine($"Dia {cliente.Nascimento.Day} - {cliente.Nome.ToUpper()} - {idade} anos");
                     count++;
                 }

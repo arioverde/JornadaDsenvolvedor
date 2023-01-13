@@ -1,4 +1,6 @@
-﻿using PetShop.Repositorios;
+﻿using PetShop.Modelos;
+using PetShop.Repositorios;
+using PetShop.Servicos;
 
 namespace PetShop
 {
@@ -7,9 +9,12 @@ namespace PetShop
         static void Main(string[] args)
         {
             var clienteRepositorio = new ClienteRepositorio();
+            clienteRepositorio.Listar();
 
-            //clienteRepositorio.Cadastro();
-            clienteRepositorio.AniversariantesMes();
+            var clienteServico = new ClienteServico();
+            //clienteServico.Cadastrar();
+               
+           
 
 
         }
