@@ -22,8 +22,6 @@ namespace PetShop.Servicos
 
         public void Menu()
         {
-
-
             var finaliza = false;
 
             while (!finaliza)
@@ -70,6 +68,7 @@ namespace PetShop.Servicos
             Console.WriteLine("====================" + Environment.NewLine);
             Console.Write("Informe o nome: ");
             var nome = Console.ReadLine();
+            
             if (!Validacoes.ValidarNome(nome, 3, 80))
             {
                 Console.WriteLine("");
@@ -82,25 +81,46 @@ namespace PetShop.Servicos
 
             Console.Write("Informe o CPF: ");
             var CPF = Console.ReadLine();
+            
+            if (!(Validacoes.ValidarCPF(CPF)))
+            {
+                Console.WriteLine("");
+                Console.WriteLine("CPF inválido!");
+                Console.Write("Tecle <Enter> para retornar ao Menu...");
+                Console.ReadKey();
+                return;
+            }
 
-            Console.Write("Informe a data de nascimento (--/--/----): ");
+            CPF = Convert.ToUInt64(CPF).ToString(@"000\.000\.000\-00");
+
+            if(_repositorio.ExisteCPF(CPF))
+            {
+                Console.WriteLine("");
+                Console.WriteLine("CPF já cadastrado!");
+                Console.Write("Tecle <Enter> para retornar ao Menu...");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.Write("Informe a data de nascimento, no formato --/--/---): ");
             var nascimentoString = Console.ReadLine();
 
-            if (!Validacoes.ValidaFormatoData(nascimentoString))
+            if (!(Validacoes.ValidarData(nascimentoString)))
             {
                 Console.WriteLine(Environment.NewLine);
-                Console.WriteLine("Formato de data inválido!");
+                Console.WriteLine("Data ou formato inválido!");
                 Console.Write("Tecle <Enter> para retornar ao Menu...");
                 Console.ReadKey();
                 Console.Clear();
                 return;
             }
-            var nascimento = new DateTime();
-            nascimento = DateTime.ParseExact(nascimentoString, "dd/MM/yyyy", null);
+
+            var nascimento = DateTime.ParseExact(nascimentoString, "dd/MM/yyyy", null);
 
             if (!Validacoes.ValidarFaixaEtaria(nascimento))
             {
-                Console.WriteLine("Cadastro permitido somente para pessoas entre 16 e 120 anos.");
+                Console.WriteLine("");
+                Console.WriteLine("Cadastro permitido somente para pessoas entre 16 e 120 anos!");
                 Console.Write("Tecle <Enter> para retornar ao Menu...");
                 Console.ReadKey();
                 return;
@@ -140,23 +160,38 @@ namespace PetShop.Servicos
             Console.WriteLine("======================" + Environment.NewLine);
             Console.Write("Informe o CPF: ");
             var CPFinformado = Console.ReadLine();
-            Console.WriteLine("");
 
-            foreach (var cliente in clientes)
+            if (!(Validacoes.ValidarCPF(CPFinformado)))
             {
-                if (cliente.CPF == CPFinformado)
+                Console.WriteLine("");
+                Console.WriteLine("CPF inválido!");
+                Console.Write("Tecle <Enter> para retornar ao Menu...");
+                Console.ReadKey();
+                return;
+            }
+
+            CPFinformado = Convert.ToUInt64(CPFinformado).ToString(@"000\.000\.000\-00");
+
+            if (clientes.Exists(x => x.CPF == CPFinformado))
+            {
+
+                foreach (var cliente in clientes)
                 {
-                    Console.WriteLine($"Nome: {cliente.Nome.ToUpper()}");
-                    Console.WriteLine($"Data Nascimento: {cliente.Nascimento.ToString(format: "dd/MM/yyyy")}");
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("CPF não cadastrado!");
-                    break;
+                    if (cliente.CPF == CPFinformado)
+                    {
+                        Console.WriteLine($"Nome: {cliente.Nome.ToUpper()}");
+                        Console.WriteLine($"Data Nascimento: {cliente.Nascimento.ToString(format: "dd/MM/yyyy")}");
+                        Console.WriteLine("");
+                        break;
+                    }
                 }
             }
-            Console.WriteLine("");
+            else
+            {
+                Console.WriteLine("");
+                Console.WriteLine("CPF não cadastrado!");
+            }
+
             Console.Write("Tecle <Enter> para retornar ao Menu...");
             Console.ReadKey();
             return;

@@ -20,7 +20,7 @@ namespace PetShop.Repositorios
                 file.Close();
             }
         }
- 
+
         public void Inserir(Cliente cliente)
         {
             var sw = new StreamWriter(_caminhoArquivo, true);
@@ -59,6 +59,15 @@ namespace PetShop.Repositorios
         {
             Carregar();
             return clientes;
+        }
+
+        public bool ExisteCPF(string CPF)
+        {
+            Carregar();
+            if (clientes.Exists(x => x.CPF == CPF))
+                return true;
+
+            return false;
         }
     }
 }
