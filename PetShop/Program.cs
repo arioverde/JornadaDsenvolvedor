@@ -8,8 +8,8 @@ namespace PetShop
     {
         static void Main(string[] args)
         {
-            new Servicos.ClienteServico().Cadastrar();
-                
+            new Servicos.ClienteServico().Menu();
+              
         }
     }
 }

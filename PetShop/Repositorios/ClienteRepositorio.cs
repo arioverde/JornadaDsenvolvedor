@@ -10,7 +10,7 @@ namespace PetShop.Repositorios
     using Modelos;
     internal class ClienteRepositorio
     {
-        private readonly string _caminhoArquivo = $"C:{Path.DirectorySeparatorChar}RumoAtividades{Path.DirectorySeparatorChar}PetShop{Path.DirectorySeparatorChar}Clientes.csv";
+        private readonly string _caminhoArquivo = $"C:{Path.DirectorySeparatorChar}DadosPetShop{Path.DirectorySeparatorChar}Clientes.csv";
         private List<Cliente> clientes = new List<Cliente>();
         public ClienteRepositorio()
         {
@@ -20,9 +20,7 @@ namespace PetShop.Repositorios
                 file.Close();
             }
         }
-
-
-       
+ 
         public void Inserir(Cliente cliente)
         {
             var sw = new StreamWriter(_caminhoArquivo, true);
@@ -32,7 +30,9 @@ namespace PetShop.Repositorios
             sw.WriteLine(registro);
             sw.Close();
 
-            Console.WriteLine("Cliente cadastrado com sucesso! - Tecle <Enter> para continuar...");
+            Console.WriteLine(Environment.NewLine);
+            Console.WriteLine("Cliente cadastrado com sucesso!");
+            Console.Write("Tecle <Enter> para retornar ao Menu...");
             Console.ReadKey();
         }
         private void Carregar()
@@ -55,7 +55,6 @@ namespace PetShop.Repositorios
 
             sr.Close();
         }
-
         public List<Cliente> RetornaListaAtualizada()
         {
             Carregar();
