@@ -38,26 +38,44 @@ namespace PetShop.Servicos
                 Console.WriteLine("5 - FECHA O PROGRAMA");
                 var opcao = Console.ReadLine();
 
-                switch (opcao)
+                try
                 {
-                    case "1":
-                        Cadastrar();
-                        break;
-                    case "2":
-                        Listar();
-                        break;
-                    case "3":
-                        ExibePorCPF();
-                        break;
-                    case "4":
-                        AniversariantesMes();
-                        break;
-                    case "5":
-                        finaliza = true;
-                        break;
-                    default:
-                        Console.WriteLine("Selecione uma opção válida");
-                        break;
+                    switch (opcao)
+                    {
+                        case "1":
+                            Cadastrar();
+                            break;
+                        case "2":
+                            Listar();
+                            break;
+                        case "3":
+                            ExibePorCPF();
+                            break;
+                        case "4":
+                            AniversariantesMes();
+                            break;
+                        case "5":
+                            finaliza = true;
+                            break;
+                        default:
+                            {
+                                Console.Write("Opção inválida. Tecle <Enter> para tentar novamente...");
+                                Console.ReadKey();
+                                break;
+                            }
+                    }
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine(ex.Message);
+                    Console.Write("Tecle <Enter> para retornar ao Menu...");
+                    Console.ReadKey();
+                }
+                catch (Exception ex)
+                {
+
+
                 }
             }
         }
@@ -68,63 +86,27 @@ namespace PetShop.Servicos
             Console.WriteLine("====================" + Environment.NewLine);
             Console.Write("Informe o nome: ");
             var nome = Console.ReadLine();
-            
             if (!Validacoes.ValidarNome(nome, 3, 80))
-            {
-                Console.WriteLine("");
-                Console.WriteLine("Nome inválido. O número de caracteres deve estar entre 3 e 80!");
-                Console.Write("Tecle <Enter> para retornar ao Menu...");
-                Console.ReadKey();
-                Console.Clear();
-                return;
-            }
+                throw new InvalidOperationException("Nome inválido. O número de caracteres deve estar entre 3 e 80!");
 
             Console.Write("Informe o CPF: ");
             var CPF = Console.ReadLine();
-            
             if (!(Validacoes.ValidarCPF(CPF)))
-            {
-                Console.WriteLine("");
-                Console.WriteLine("CPF inválido!");
-                Console.Write("Tecle <Enter> para retornar ao Menu...");
-                Console.ReadKey();
-                return;
-            }
+                throw new InvalidOperationException("CPF inválido!");
 
             CPF = Convert.ToUInt64(CPF).ToString(@"000\.000\.000\-00");
 
-            if(_repositorio.ExisteCPF(CPF))
-            {
-                Console.WriteLine("");
-                Console.WriteLine("CPF já cadastrado!");
-                Console.Write("Tecle <Enter> para retornar ao Menu...");
-                Console.ReadKey();
-                return;
-            }
+            if (_repositorio.ExisteCPF(CPF))
+                throw new InvalidOperationException("CPF já cadastrado!");
 
-            Console.Write("Informe a data de nascimento, no formato --/--/---): ");
+            Console.Write("Informe a data de nascimento, no formato --/--/----): ");
             var nascimentoString = Console.ReadLine();
-
             if (!(Validacoes.ValidarData(nascimentoString)))
-            {
-                Console.WriteLine(Environment.NewLine);
-                Console.WriteLine("Data ou formato inválido!");
-                Console.Write("Tecle <Enter> para retornar ao Menu...");
-                Console.ReadKey();
-                Console.Clear();
-                return;
-            }
+                throw new InvalidOperationException("Data ou formato inválido!");
 
             var nascimento = DateTime.ParseExact(nascimentoString, "dd/MM/yyyy", null);
-
             if (!Validacoes.ValidarFaixaEtaria(nascimento))
-            {
-                Console.WriteLine("");
-                Console.WriteLine("Cadastro permitido somente para pessoas entre 16 e 120 anos!");
-                Console.Write("Tecle <Enter> para retornar ao Menu...");
-                Console.ReadKey();
-                return;
-            }
+                throw new InvalidOperationException("Cadastro permitido somente para pessoas entre 16 e 120 anos!");
 
             _repositorio.Inserir(new Modelos.Cliente()
             {
@@ -162,34 +144,22 @@ namespace PetShop.Servicos
             var CPFinformado = Console.ReadLine();
 
             if (!(Validacoes.ValidarCPF(CPFinformado)))
-            {
-                Console.WriteLine("");
-                Console.WriteLine("CPF inválido!");
-                Console.Write("Tecle <Enter> para retornar ao Menu...");
-                Console.ReadKey();
-                return;
-            }
+                throw new InvalidOperationException("CPF inválido!");
 
             CPFinformado = Convert.ToUInt64(CPFinformado).ToString(@"000\.000\.000\-00");
 
-            if (clientes.Exists(x => x.CPF == CPFinformado))
-            {
+            if (!(_repositorio.ExisteCPF(CPFinformado)))
+                throw new InvalidOperationException("CPF não cadastrado!");
 
-                foreach (var cliente in clientes)
-                {
-                    if (cliente.CPF == CPFinformado)
-                    {
-                        Console.WriteLine($"Nome: {cliente.Nome.ToUpper()}");
-                        Console.WriteLine($"Data Nascimento: {cliente.Nascimento.ToString(format: "dd/MM/yyyy")}");
-                        Console.WriteLine("");
-                        break;
-                    }
-                }
-            }
-            else
+            foreach (var cliente in clientes)
             {
-                Console.WriteLine("");
-                Console.WriteLine("CPF não cadastrado!");
+                if (cliente.CPF == CPFinformado)
+                {
+                    Console.WriteLine($"Nome: {cliente.Nome.ToUpper()}");
+                    Console.WriteLine($"Data Nascimento: {cliente.Nascimento.ToString(format: "dd/MM/yyyy")}");
+                    Console.WriteLine("");
+                    break;
+                }
             }
 
             Console.Write("Tecle <Enter> para retornar ao Menu...");
@@ -201,8 +171,8 @@ namespace PetShop.Servicos
             var clientes = _repositorio.RetornaListaAtualizada();
 
             Console.Clear();
-            Console.WriteLine("Aniversariantes do mês");
-            Console.WriteLine("=======================" + Environment.NewLine);
+            Console.WriteLine($"Aniversariantes do mês de {DateTime.Now.ToString("MMMM")}");
+            Console.WriteLine("===================================" + Environment.NewLine);
 
             clientes = clientes.FindAll(x => x.Nascimento.Month == DateTime.Now.Month);
 
@@ -210,7 +180,7 @@ namespace PetShop.Servicos
             {
                 foreach (var cliente in clientes.OrderBy(x => x.Nascimento.Day))
                 {
-                    Console.WriteLine($"Dia {cliente.Nascimento.Day} - {cliente.Nome.ToUpper()}");
+                    Console.WriteLine($"Dia {cliente.Nascimento.Day.ToString("D2")} - {cliente.Nome.ToUpper()}");
                 }
                 Console.WriteLine(Environment.NewLine);
             }
