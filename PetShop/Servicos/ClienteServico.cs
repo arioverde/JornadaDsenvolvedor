@@ -19,7 +19,6 @@ namespace PetShop.Servicos
         {
             _repositorio = new Repositorios.ClienteRepositorio();
         }
-
         public void Menu()
         {
             var finaliza = false;
@@ -83,6 +82,7 @@ namespace PetShop.Servicos
                 }
             }
         }
+        #region (Métodos privados)
         private void Cadastrar()
         {
             Console.Clear();
@@ -195,5 +195,6 @@ namespace PetShop.Servicos
             Console.ReadKey();
             return;
         }
+        #endregion
     }
 }

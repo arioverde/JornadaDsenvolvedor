@@ -8,19 +8,18 @@ using System.Threading.Tasks;
 namespace PetShop.Repositorios
 {
     using Modelos;
-    internal class ClienteRepositorio
+    public class ClienteRepositorio
     {
         private readonly string _caminhoArquivo = $"C:{Path.DirectorySeparatorChar}DadosPetShop{Path.DirectorySeparatorChar}Clientes.csv";
         private List<Cliente> clientes = new List<Cliente>();
         public ClienteRepositorio()
         {
-            //if (!File.Exists(_caminhoArquivo))
-            //{
-            //    var file = File.Create(_caminhoArquivo);
-            //    file.Close();
-            //}
+            if (!File.Exists(_caminhoArquivo))
+            {
+                var file = File.Create(_caminhoArquivo);
+                file.Close();
+            }
         }
-
         public void Inserir(Cliente cliente)
         {
             var sw = new StreamWriter(_caminhoArquivo, true);
@@ -34,6 +33,19 @@ namespace PetShop.Repositorios
             Console.WriteLine("Cliente cadastrado com sucesso!");
             Console.Write("Tecle <Enter> para retornar ao Menu...");
             Console.ReadKey();
+        }
+        public List<Cliente> RetornaListaAtualizada()
+        {
+            Carregar();
+            return clientes;
+        }
+        public bool ExisteCPF(string CPF)
+        {
+            Carregar();
+            if (clientes.Exists(x => x.CPF == CPF))
+                return true;
+
+            return false;
         }
         private void Carregar()
         {
@@ -54,20 +66,6 @@ namespace PetShop.Repositorios
             }
 
             sr.Close();
-        }
-        public List<Cliente> RetornaListaAtualizada()
-        {
-            Carregar();
-            return clientes;
-        }
-
-        public bool ExisteCPF(string CPF)
-        {
-            Carregar();
-            if (clientes.Exists(x => x.CPF == CPF))
-                return true;
-
-            return false;
         }
     }
 }
