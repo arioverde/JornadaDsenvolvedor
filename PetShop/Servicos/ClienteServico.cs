@@ -74,8 +74,12 @@ namespace PetShop.Servicos
                 }
                 catch (Exception ex)
                 {
-
-
+                    Console.WriteLine("");
+                    Console.WriteLine("Erro inesperado! Entre com contato com o Administrador e informe o erro abaixo:");
+                    Console.WriteLine($"===> {ex.Message}");
+                    Console.WriteLine("");
+                    Console.Write("Tecle <Enter> para retornar ao Menu...");
+                    Console.ReadKey();
                 }
             }
         }

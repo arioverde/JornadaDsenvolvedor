@@ -14,11 +14,11 @@ namespace PetShop.Repositorios
         private List<Cliente> clientes = new List<Cliente>();
         public ClienteRepositorio()
         {
-            if (!File.Exists(_caminhoArquivo))
-            {
-                var file = File.Create(_caminhoArquivo);
-                file.Close();
-            }
+            //if (!File.Exists(_caminhoArquivo))
+            //{
+            //    var file = File.Create(_caminhoArquivo);
+            //    file.Close();
+            //}
         }
 
         public void Inserir(Cliente cliente)
