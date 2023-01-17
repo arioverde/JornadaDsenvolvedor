@@ -47,6 +47,22 @@ namespace PetShop.Repositorios
 
             return false;
         }
+        public void Atualizar(List<Cliente> clientes)
+        {
+            var sw = new StreamWriter(_caminhoArquivo);
+
+            foreach (var cliente in clientes)
+            {
+                string registro = $"{cliente.Nome};{cliente.CPF};{cliente.Nascimento}";
+                sw.WriteLine(registro);
+            }
+            sw.Close();
+
+            Console.WriteLine(Environment.NewLine);
+            Console.WriteLine("Cadastro atualizado com sucesso!");
+            Console.Write("Tecle <Enter> para retornar ao Menu...");
+            Console.ReadKey();
+        }
         private void Carregar()
         {
             clientes.Clear();

@@ -26,15 +26,18 @@ namespace PetShop.Servicos
             while (!finaliza)
             {
                 Console.Clear();
-                Console.WriteLine("======= PetShop Rio Verde ======= ");
                 Console.WriteLine("");
-                Console.WriteLine("Escolha uma opção:");
+                Console.WriteLine(" PET SHOP - Gerenciamento de Clientes");
+                Console.WriteLine(" ====================================");
                 Console.WriteLine("");
-                Console.WriteLine("1 - Cadastrar clientes");
-                Console.WriteLine("2 - Listar clientes");
-                Console.WriteLine("3 - Busca cliente pelo CPF");
-                Console.WriteLine("4 - Listar aniversariantes do mês atual");
-                Console.WriteLine("5 - FECHA O PROGRAMA");
+                Console.WriteLine(" Escolha uma opção:");
+                Console.WriteLine("");
+                Console.WriteLine(" 1 - Cadastrar clientes");
+                Console.WriteLine(" 2 - Listar clientes");
+                Console.WriteLine(" 3 - Buscar cliente pelo CPF");
+                Console.WriteLine(" 4 - Listar aniversariantes do mês atual");
+                Console.WriteLine(" 5 - Atualizar cadastro do cliente");
+                Console.WriteLine(" 6 - FECHAR O PROGRAMA");
                 var opcao = Console.ReadLine();
 
                 try
@@ -48,12 +51,15 @@ namespace PetShop.Servicos
                             Listar();
                             break;
                         case "3":
-                            ExibePorCPF();
+                            ExibirPorCPF();
                             break;
                         case "4":
-                            AniversariantesMes();
+                            ExibirAniversariantesMes();
                             break;
                         case "5":
+                            Atualizar();
+                            break;
+                        case "6":
                             finaliza = true;
                             break;
                         default:
@@ -103,7 +109,7 @@ namespace PetShop.Servicos
             if (_repositorio.ExisteCPF(CPF))
                 throw new InvalidOperationException("CPF já cadastrado!");
 
-            Console.Write("Informe a data de nascimento, no formato --/--/----): ");
+            Console.Write("Informe a data de nascimento (formato 99/99/9999): ");
             var nascimentoString = Console.ReadLine();
             if (!(Validacoes.ValidarData(nascimentoString)))
                 throw new InvalidOperationException("Data ou formato inválido!");
@@ -137,7 +143,88 @@ namespace PetShop.Servicos
             Console.Write("Tecle <Enter> para retornar ao Menu...");
             Console.ReadKey();
         }
-        private void ExibePorCPF()
+        private void Atualizar()
+        {
+            var clientes = _repositorio.RetornaListaAtualizada();
+
+            Console.Clear();
+            Console.WriteLine("Atualizar o cadastro");
+            Console.WriteLine("====================" + Environment.NewLine);
+            Console.Write("Informe o CPF: ");
+            var CPFinformado = Console.ReadLine();
+
+            if (!(Validacoes.ValidarCPF(CPFinformado)))
+                throw new InvalidOperationException("CPF inválido!");
+
+            var CPFvalido = Convert.ToUInt64(CPFinformado).ToString(@"000\.000\.000\-00");
+
+            if (!(_repositorio.ExisteCPF(CPFvalido)))
+                throw new InvalidOperationException("CPF não cadastrado!");
+
+            int posicao = clientes.FindIndex(x => x.CPF == CPFvalido);
+            var cliente = clientes[posicao];
+
+            var opcao = "";
+
+            do
+            {
+                Console.Clear();
+
+                Console.WriteLine("Dados atuais:");
+                Console.WriteLine("===========================");
+                Console.WriteLine($"CPF: {clientes[posicao].CPF}");
+                Console.WriteLine($"Nome: {clientes[posicao].Nome.ToUpper()}");
+                Console.WriteLine($"Data Nascimento: {clientes[posicao].Nascimento.ToString(format: "dd/MM/yyyy")}");
+                Console.WriteLine("===========================");
+
+                Console.WriteLine("");
+                Console.WriteLine("Qual dado deseja alterar?" + Environment.NewLine);
+                Console.WriteLine(" 1 - Nome");
+                Console.WriteLine(" 2 - Data de Nascimento");
+                Console.WriteLine(" 3 - SAIR");
+                opcao = Console.ReadLine();
+
+                switch (opcao)
+                {
+                    case "1":
+                        clientes[posicao].Nome = AlterarNome();
+                        break;
+                    case "2":
+                        clientes[posicao].Nascimento = AlterarDataNascimento();
+                        break;
+                    case "3":
+                        break;
+                    default:
+                        continue;
+                }
+            } while (opcao != "3");
+
+            _repositorio.Atualizar(clientes);
+        }
+        private string AlterarNome()
+        {
+            Console.Write("");
+            Console.Write("Digite o nome: ");
+            var nome = Console.ReadLine();
+            if (!Validacoes.ValidarNome(nome, 3, 80))
+                throw new InvalidOperationException("Nome inválido. O número de caracteres deve estar entre 3 e 80!");
+
+            return nome;
+        }
+        private DateTime AlterarDataNascimento()
+        {
+            Console.Write("Altere a data de nascimento (formato 99/99/9999): ");
+            var nascimentoString = Console.ReadLine();
+            if (!(Validacoes.ValidarData(nascimentoString)))
+                throw new InvalidOperationException("Data ou formato inválido!");
+
+            var nascimento = DateTime.ParseExact(nascimentoString, "dd/MM/yyyy", null);
+            if (!Validacoes.ValidarFaixaEtaria(nascimento))
+                throw new InvalidOperationException("Cadastro permitido somente para pessoas entre 16 e 120 anos!");
+
+            return nascimento;
+        }
+        private void ExibirPorCPF()
         {
             var clientes = _repositorio.RetornaListaAtualizada();
 
@@ -150,14 +237,15 @@ namespace PetShop.Servicos
             if (!(Validacoes.ValidarCPF(CPFinformado)))
                 throw new InvalidOperationException("CPF inválido!");
 
-            CPFinformado = Convert.ToUInt64(CPFinformado).ToString(@"000\.000\.000\-00");
+            var CPFvalido = Convert.ToUInt64(CPFinformado).ToString(@"000\.000\.000\-00");
 
-            if (!(_repositorio.ExisteCPF(CPFinformado)))
+            if (!(_repositorio.ExisteCPF(CPFvalido)))
                 throw new InvalidOperationException("CPF não cadastrado!");
 
+            Console.WriteLine("");
             foreach (var cliente in clientes)
             {
-                if (cliente.CPF == CPFinformado)
+                if (cliente.CPF == CPFvalido)
                 {
                     Console.WriteLine($"Nome: {cliente.Nome.ToUpper()}");
                     Console.WriteLine($"Data Nascimento: {cliente.Nascimento.ToString(format: "dd/MM/yyyy")}");
@@ -170,7 +258,7 @@ namespace PetShop.Servicos
             Console.ReadKey();
             return;
         }
-        private void AniversariantesMes()
+        private void ExibirAniversariantesMes()
         {
             var clientes = _repositorio.RetornaListaAtualizada();
 
