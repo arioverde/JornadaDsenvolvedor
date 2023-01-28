@@ -11,4 +11,6 @@ namespace ApiPonto.Models.Models
         public int CargoId { get; set; }
         public string Descricao { get; set; }
     }
+
+
 }

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApiPonto.Models\ApiPonto.Models.csproj" />
     <ProjectReference Include="..\ApiPonto.Repositories\ApiPonto.Repositories.csproj" />
   </ItemGroup>
 

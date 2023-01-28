@@ -8,7 +8,7 @@ namespace ApiPonto.Models.Models
 {
     public class Funcionario
     {
-        public int FunconarioId { get; set; }
+        public int FuncionarioId { get; set; }
         public string NomeDoFuncionario { get; set; }
         public string Cpf { get; set; }
         public DateTime DataDeAdmissao { get; set; }
