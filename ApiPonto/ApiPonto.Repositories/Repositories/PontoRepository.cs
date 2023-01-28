@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ApiPonto.Repositories.Repositories
 {
-    public class PontoRepositorio : Contexto
+    public class PontoRepository : Contexto
     {
         public void Inserir(Ponto model)
         {
@@ -84,7 +84,7 @@ namespace ApiPonto.Repositories.Repositories
                     throw new ValidadaoException($"Nenhum registro afetado para o Ponto {PontoId}");
             }
         }
-        public Ponto? Obter(string PontoId)
+        public Ponto? Obter(int PontoId)
         {
             string comandoSql = @"SELECT PontoId, DataHorarioPonto, Justificativa, FuncionarioId FROM Ponto WHERE PontoId = @PontoId";
 

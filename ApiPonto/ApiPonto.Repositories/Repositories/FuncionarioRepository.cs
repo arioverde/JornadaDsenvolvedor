@@ -87,7 +87,7 @@ namespace ApiPonto.Repositories.Repositories
                 }
             }
         }
-        public void Deletar(string FuncionarioId)
+        public void Deletar(int FuncionarioId)
         {
             string comandoSql = "DELETE FROM Funcionarios WHERE FuncionarioId = @FuncionarioId";
 
@@ -98,7 +98,7 @@ namespace ApiPonto.Repositories.Repositories
                     throw new ValidadaoException($"Nenhum registro afetado para o Funcionário {FuncionarioId}");
             }
         }
-        public Funcionario? Obter(string FuncionarioId)
+        public Funcionario? Obter(int FuncionarioId)
         {
             string comandoSql = @"SELECT FuncionarioId, NomeDoFuncionario, Cpf, DataDeAdmissao, CelularFuncionario, EmailFuncionario, CargoId FROM Funcionarios WHERE FuncionarioId = @FuncionarioId";
 
