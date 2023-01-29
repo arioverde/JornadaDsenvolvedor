@@ -13,15 +13,14 @@ namespace ApiPonto.Repositories.Repositories
     {
         public void Inserir(Ponto model)
         {
-            string comandoSql = @"INSERT INTO Ponto (PontoId, DataHorarioPonto, Justificativa, FuncionarioId) 
+            string comandoSql = @"INSERT INTO Ponto (DataHorarioPonto, Justificativa, FuncionarioId) 
                                 VALUES 
-                                (@PontoId, @DataHorarioPonto, @Justificativa, @FuncionarioId)";
+                                (@DataHorarioPonto, @Justificativa, @FuncionarioId)";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
-                cmd.Parameters.AddWithValue("@PontoId", model.PontoId);
                 cmd.Parameters.AddWithValue("@DataHorarioPonto", model.DataHorarioPonto);
-                cmd.Parameters.AddWithValue("@Justificativa", model.Justificativa is null ? DBNull.Value : model.Justificativa);
+                cmd.Parameters.AddWithValue("@Justificativa", model.Justificativa);
                 cmd.Parameters.AddWithValue("@FuncionarioId", model.FuncionarioId);
                 cmd.ExecuteNonQuery();
             }

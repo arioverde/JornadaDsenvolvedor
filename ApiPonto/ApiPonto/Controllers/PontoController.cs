@@ -17,6 +17,8 @@ namespace ApiPonto.Controllers
         [HttpPost("ponto")]
         public IActionResult Inserir([FromBody] Ponto model)
         {
+            model.DataHorarioPonto = DateTime.Now;
+            
             try
             {
                 _service.Inserir(model);
