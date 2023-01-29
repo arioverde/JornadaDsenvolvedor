@@ -45,32 +45,24 @@ namespace ApiPonto.Repositories.Repositories
                 return Convert.ToBoolean(cmd.ExecuteScalar());
             }
         }
-        public List<Lideranca> ListarLiderancas(string? nome)
+        public List<Lideranca> ListarLiderancas()
         {
             string comandoSql = @"SELECT LiderancaId, FuncionarioId, DescricaoEquipe FROM Liderancas";
 
-            if (!(string.IsNullOrWhiteSpace(nome)))
-                comandoSql += " WHERE Descricao LIKE @nome";
-
-
             using (var cmd = new SqlCommand(comandoSql, _conn))
-            {
-                if (!(string.IsNullOrWhiteSpace(nome)))
-                    cmd.Parameters.AddWithValue("@nome", "%" + nome + "%");
 
-                using (var rdr = cmd.ExecuteReader())
+            using (var rdr = cmd.ExecuteReader())
+            {
+                var liderancas = new List<Lideranca>();
+                while (rdr.Read())
                 {
-                    var liderancas = new List<Lideranca>();
-                    while (rdr.Read())
-                    {
-                        var lideranca = new Lideranca();
-                        lideranca.LiderancaId = Convert.ToInt32(rdr["LiderancaId"]);
-                        lideranca.FuncionarioId = Convert.ToInt32(rdr["FuncionarioId"]);
-                        lideranca.DescricaoEquipe = Convert.ToString(rdr["DescricaoEquipe"]);
-                        liderancas.Add(lideranca);
-                    }
-                    return liderancas;
+                    var lideranca = new Lideranca();
+                    lideranca.LiderancaId = Convert.ToInt32(rdr["LiderancaId"]);
+                    lideranca.FuncionarioId = Convert.ToInt32(rdr["FuncionarioId"]);
+                    lideranca.DescricaoEquipe = Convert.ToString(rdr["DescricaoEquipe"]);
+                    liderancas.Add(lideranca);
                 }
+                return liderancas;
             }
         }
         public void Deletar(int LiderancaId)
@@ -109,6 +101,5 @@ namespace ApiPonto.Repositories.Repositories
                 }
             }
         }
-
     }
 }

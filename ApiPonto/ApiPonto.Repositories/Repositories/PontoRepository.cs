@@ -73,7 +73,7 @@ namespace ApiPonto.Repositories.Repositories
                 return pontos;
             }
         }
-        public void Deletar(string PontoId)
+        public void Deletar(int PontoId)
         {
             string comandoSql = "DELETE FROM Ponto WHERE PontoId = @PontoId";
 

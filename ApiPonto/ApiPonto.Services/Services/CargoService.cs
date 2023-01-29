@@ -16,12 +16,12 @@ namespace ApiPonto.Services.Services
         {
             _repository = new CargoRepository();
         }
-        public List<Cargo> Listar(string? nome)
+        public List<Cargo> Listar()
         {
             try
             {
                 _repository.AbrirConexao();
-                return _repository.ListarCargos(nome);
+                return _repository.ListarCargos();
             }
             finally
             {

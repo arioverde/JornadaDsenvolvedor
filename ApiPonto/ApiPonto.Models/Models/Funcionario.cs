@@ -11,6 +11,7 @@ namespace ApiPonto.Models.Models
         public int FuncionarioId { get; set; }
         public string NomeDoFuncionario { get; set; }
         public string Cpf { get; set; }
+        public DateTime NascimentoFuncionario { get; set; }
         public DateTime DataDeAdmissao { get; set; }
         public string CelularFuncionario { get; set; }
         public string EmailFuncionario { get; set; }

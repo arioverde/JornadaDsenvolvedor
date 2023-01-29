@@ -15,12 +15,12 @@ namespace ApiPonto.Services.Services
         {
             _repository = new LiderancaRepository();
         }
-        public List<Lideranca> Listar(string? nome)
+        public List<Lideranca> Listar()
         {
             try
             {
                 _repository.AbrirConexao();
-                return _repository.ListarLiderancas(nome);
+                return _repository.ListarLiderancas();
             }
             finally
             {

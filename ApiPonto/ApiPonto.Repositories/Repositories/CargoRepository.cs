@@ -29,6 +29,7 @@ namespace ApiPonto.Repositories.Repositories
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
+                cmd.Parameters.AddWithValue("@CargoId", model.CargoId);
                 cmd.Parameters.AddWithValue("@Descricao", model.Descricao);
                 if (cmd.ExecuteNonQuery() == 0)
                     throw new ValidadaoException($"Nenhum registro afetado para o Cargo {model.CargoId}");
@@ -43,19 +44,12 @@ namespace ApiPonto.Repositories.Repositories
                 return Convert.ToBoolean(cmd.ExecuteScalar());
             }
         }
-        public List<Cargo> ListarCargos(string? nome)
+        public List<Cargo> ListarCargos()
         {
             string comandoSql = @"SELECT CargoId, Descricao FROM Cargos";
 
-            if (!(string.IsNullOrWhiteSpace(nome)))
-                comandoSql += " WHERE Descricao LIKE @nome";
-
-
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
-                if (!(string.IsNullOrWhiteSpace(nome)))
-                    cmd.Parameters.AddWithValue("@nome", "%" + nome + "%");
-
                 using (var rdr = cmd.ExecuteReader())
                 {
                     var cargos = new List<Cargo>();

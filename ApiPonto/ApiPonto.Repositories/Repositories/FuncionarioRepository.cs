@@ -13,14 +13,15 @@ namespace ApiPonto.Repositories.Repositories
     {
         public void Inserir(Funcionario model)
         {
-            string comandoSql = @"INSERT INTO Funcionarios (NomeDoFuncionario, Cpf, DataDeAdmissao, CelularFuncionario, EmailFuncionario, CargoId) 
+            string comandoSql = @"INSERT INTO Funcionarios (NomeDoFuncionario, Cpf, NascimentoFuncionario, DataDeAdmissao, CelularFuncionario, EmailFuncionario, CargoId) 
                                 VALUES 
-                                (@NomeDoFuncionario, @Cpf, @DataDeAdmissao, @CelularFuncionario, @EmailFuncionario, @CargoId)";
+                                (@NomeDoFuncionario, @Cpf, @NascimentoFuncionario, @DataDeAdmissao, @CelularFuncionario, @EmailFuncionario, @CargoId)";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
                 cmd.Parameters.AddWithValue("@NomeDoFuncionario", model.NomeDoFuncionario);
                 cmd.Parameters.AddWithValue("@Cpf", model.Cpf);
+                cmd.Parameters.AddWithValue("@NascimentoFuncionario", model.NascimentoFuncionario);
                 cmd.Parameters.AddWithValue("@DataDeAdmissao", model.DataDeAdmissao);
                 cmd.Parameters.AddWithValue("@CelularFuncionario", model.CelularFuncionario is null ? DBNull.Value : model.CelularFuncionario);
                 cmd.Parameters.AddWithValue("@EmailFuncionario", model.EmailFuncionario);
@@ -31,19 +32,22 @@ namespace ApiPonto.Repositories.Repositories
         public void Atualizar(Funcionario model)
         {
             string comandoSql = @"UPDATE Funcionarios 
-                                SET NomeDoFuncionario = @NomeDoFuncionario, Cpf = @Cpf, DataDeAdmissao = @DataDeAdmissao, CelularFuncionario = @CelularFuncionario, EmailFuncionario = @EmailFuncionario, CargoId = @CargoId
+                                SET NomeDoFuncionario = @NomeDoFuncionario, Cpf = @Cpf, NascimentoFuncionario = @NascimentoFuncionario,
+                                DataDeAdmissao = @DataDeAdmissao, CelularFuncionario = @CelularFuncionario, EmailFuncionario = @EmailFuncionario, CargoId = @CargoId
                                 WHERE FuncionarioId = @FuncionarioId";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
+                cmd.Parameters.AddWithValue("@FuncionarioId", model.FuncionarioId);
                 cmd.Parameters.AddWithValue("@NomeDoFuncionario", model.NomeDoFuncionario);
                 cmd.Parameters.AddWithValue("@Cpf", model.Cpf);
                 cmd.Parameters.AddWithValue("@DataDeAdmissao", model.DataDeAdmissao);
+                cmd.Parameters.AddWithValue("@NascimentoFuncionario", model.NascimentoFuncionario);
                 cmd.Parameters.AddWithValue("@CelularFuncionario", model.CelularFuncionario is null ? DBNull.Value : model.CelularFuncionario);
                 cmd.Parameters.AddWithValue("@EmailFuncionario", model.EmailFuncionario);
                 cmd.Parameters.AddWithValue("@CargoId", model.CargoId);
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para o Funcionario {model.FuncionarioId}");
+                    throw new ValidadaoException($"Nenhum registro afetado para o Funcionário {model.FuncionarioId}");
             }
         }
         public bool SeExiste(string FuncionarioId)
@@ -57,10 +61,10 @@ namespace ApiPonto.Repositories.Repositories
         }
         public List<Funcionario> ListarFuncionarios(string? nome)
         {
-            string comandoSql = @"SELECT FuncionarioId, NomeDoFuncionario, Cpf, DataDeAdmissao, CelularFuncionario, EmailFuncionario, CargoId FROM Funcionarios";
+            string comandoSql = @"SELECT FuncionarioId, NomeDoFuncionario, Cpf, NascimentoFuncionario, DataDeAdmissao, CelularFuncionario, EmailFuncionario, CargoId FROM Funcionarios";
 
             if (!(string.IsNullOrWhiteSpace(nome)))
-                comandoSql += " WHERE Nome LIKE @nome";
+                comandoSql += " WHERE NomeDoFuncionario LIKE @nome";
 
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
@@ -77,6 +81,7 @@ namespace ApiPonto.Repositories.Repositories
                         funcionario.FuncionarioId = Convert.ToInt32(rdr["FuncionarioId"]);
                         funcionario.NomeDoFuncionario = Convert.ToString(rdr["NomeDoFuncionario"]);
                         funcionario.Cpf = Convert.ToString(rdr["Cpf"]);
+                        funcionario.NascimentoFuncionario= Convert.ToDateTime(rdr["NascimentoFuncionario"]);
                         funcionario.DataDeAdmissao = Convert.ToDateTime(rdr["DataDeAdmissao"]);
                         funcionario.CelularFuncionario = rdr["CelularFuncionario"] == DBNull.Value ? null : Convert.ToString(rdr["CelularFuncionario"]);
                         funcionario.EmailFuncionario = Convert.ToString(rdr["EmailFuncionario"]);
@@ -100,7 +105,7 @@ namespace ApiPonto.Repositories.Repositories
         }
         public Funcionario? Obter(int FuncionarioId)
         {
-            string comandoSql = @"SELECT FuncionarioId, NomeDoFuncionario, Cpf, DataDeAdmissao, CelularFuncionario, EmailFuncionario, CargoId FROM Funcionarios WHERE FuncionarioId = @FuncionarioId";
+            string comandoSql = @"SELECT FuncionarioId, NomeDoFuncionario, Cpf, NascimentoFuncionario, DataDeAdmissao, CelularFuncionario, EmailFuncionario, CargoId FROM Funcionarios WHERE FuncionarioId = @FuncionarioId";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
@@ -115,6 +120,7 @@ namespace ApiPonto.Repositories.Repositories
                         funcionario.FuncionarioId = Convert.ToInt32(rdr["FuncionarioId"]);
                         funcionario.NomeDoFuncionario = Convert.ToString(rdr["NomeDoFuncionario"]);
                         funcionario.Cpf = Convert.ToString(rdr["Cpf"]);
+                        funcionario.NascimentoFuncionario = Convert.ToDateTime(rdr["NascimentoFuncionario"]);
                         funcionario.DataDeAdmissao = Convert.ToDateTime(rdr["DataDeAdmissao"]);
                         funcionario.CelularFuncionario = rdr["CelularFuncionario"] == DBNull.Value ? null : Convert.ToString(rdr["CelularFuncionario"]);
                         funcionario.EmailFuncionario = Convert.ToString(rdr["EmailFuncionario"]);
