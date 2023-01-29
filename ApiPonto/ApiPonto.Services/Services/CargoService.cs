@@ -81,21 +81,16 @@ namespace ApiPonto.Services.Services
         }
         private static void ValidarModel(Cargo model)
         {
-            //if (model is null)
-            //    throw new ValidadaoException("Jason mal formatado ou vazio.");
+            if (model is null)
+                throw new ValidacaoException("Json mal formatado ou vazio.");
 
-            //if (string.IsNullOrWhiteSpace(model.Nome))
-            //    throw new ValidadaoException("O nome é obrigatório.");
+            if (string.IsNullOrWhiteSpace(model.Descricao))
+                throw new ValidacaoException("A descrição é obrigatória.");
 
-            //if (model.Nome.Trim().Length < 3 || model.Nome.Trim().Length > 255)
-            //    throw new ValidadaoException("O nome deve possuir entre 3 e 255 caracteres.");
+            if (model.Descricao.Trim().Length < 3 || model.Descricao.Trim().Length > 255)
+                throw new ValidacaoException("A descrição deve possuir entre 3 e 255 caracteres.");
 
-            //if (!(model.Valor > 0))
-            //    throw new ValidadaoException("O valor deve ser informado.");
-
-            //model.Nome = model.Nome.Trim();
-
+            model.Descricao = model.Descricao.Trim();
         }
-
     }
 }

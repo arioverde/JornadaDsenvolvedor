@@ -1,4 +1,5 @@
-﻿using ApiPonto.Models.Models;
+﻿using ApiPonto.Models.Exceptions;
+using ApiPonto.Models.Models;
 using ApiPonto.Repositories.Repositories;
 using System;
 using System.Collections.Generic;
@@ -80,20 +81,19 @@ namespace ApiPonto.Services.Services
         }
         private static void ValidarModel(Lideranca model)
         {
-            //if (model is null)
-            //    throw new ValidadaoException("Jason mal formatado ou vazio.");
+            if (model is null)
+                throw new ValidacaoException("Json mal formatado ou vazio.");
 
-            //if (string.IsNullOrWhiteSpace(model.Nome))
-            //    throw new ValidadaoException("O nome é obrigatório.");
+            if (!(model.FuncionarioId == 0))
+                throw new ValidacaoException("O identificador do funcionário deve ser informado.");
 
-            //if (model.Nome.Trim().Length < 3 || model.Nome.Trim().Length > 255)
-            //    throw new ValidadaoException("O nome deve possuir entre 3 e 255 caracteres.");
+            if (string.IsNullOrWhiteSpace(model.DescricaoEquipe))
+                throw new ValidacaoException("A descrição da equipe é obrigatória.");
 
-            //if (!(model.Valor > 0))
-            //    throw new ValidadaoException("O valor deve ser informado.");
+            if (model.DescricaoEquipe.Trim().Length < 3 || model.DescricaoEquipe.Trim().Length > 255)
+                throw new ValidacaoException("A descrição da equipe deve possuir entre 3 e 255 caracteres.");
 
-            //model.Nome = model.Nome.Trim();
-
+            model.DescricaoEquipe = model.DescricaoEquipe.Trim();
         }
     }
 }

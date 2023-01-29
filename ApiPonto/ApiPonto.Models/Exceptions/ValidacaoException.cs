@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace ApiPonto.Models.Exceptions
 { 
-    public class ValidadaoException : Exception
+    public class ValidacaoException : Exception
     {
-        public ValidadaoException() { }
+        public ValidacaoException() { }
 
-        public ValidadaoException(string message)
+        public ValidacaoException(string message)
             : base(message) { }
 
-        public ValidadaoException(string message, Exception inner)
+        public ValidacaoException(string message, Exception inner)
             : base(message, inner) { }
     }
 }

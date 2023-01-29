@@ -10,7 +10,7 @@ namespace ApiPonto.Models.Models
     {
         public long PontoId { get; set; }
         public DateTime DataHorarioPonto { get; set; }
-        public string Justificativa { get; set; }
+        public string? Justificativa { get; set; }
         public int FuncionarioId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ApiPonto.Models.Models;
+﻿using ApiPonto.Models.Exceptions;
+using ApiPonto.Models.Models;
 using ApiPonto.Repositories.Repositories;
 using System;
 using System.Collections.Generic;
@@ -80,20 +81,18 @@ namespace ApiPonto.Services.Services
         }
         private static void ValidarModel(Ponto model)
         {
-            // if (model is null)
-            //    throw new ValidadaoException("Jason mal formatado ou vazio.");
+            if (model is null)
+                throw new ValidacaoException("Json mal formatado ou vazio.");
 
-            //if (string.IsNullOrWhiteSpace(model.Nome))
-            //    throw new ValidadaoException("O nome é obrigatório.");
+            if (model.DataHorarioPonto.Equals(DBNull.Value))
+                throw new ValidacaoException("A data e hora do ponto deve ser informada.");
 
-            //if (model.Nome.Trim().Length < 3 || model.Nome.Trim().Length > 255)
-            //    throw new ValidadaoException("O nome deve possuir entre 3 e 255 caracteres.");
+            if (model.Justificativa is not null)
+                if (model.Justificativa.Trim().Length < 3 || model.Justificativa.Trim().Length > 255)
+                    throw new ValidacaoException("A justificativa deve possuir entre 3 e 255 caracteres.");
 
-            //if (!(model.Valor > 0))
-            //    throw new ValidadaoException("O valor deve ser informado.");
-
-            //model.Nome = model.Nome.Trim();
-
+            if (!(model.FuncionarioId == 0))
+                throw new ValidacaoException("O identificador do funcionário deve ser informado.");
         }
     }
 }
