@@ -32,7 +32,7 @@ namespace ApiPonto.Repositories.Repositories
                 cmd.Parameters.AddWithValue("@CargoId", model.CargoId);
                 cmd.Parameters.AddWithValue("@Descricao", model.Descricao);
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para o Cargo {model.CargoId}");
+                    throw new ValidacaoException($"Nenhum registro afetado para o Cargo {model.CargoId}");
             }
         }
         public bool SeExiste(string CargoId)
@@ -72,7 +72,7 @@ namespace ApiPonto.Repositories.Repositories
             {
                 cmd.Parameters.AddWithValue("@CargoId", CargoId);
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para o Cargo {CargoId}");
+                    throw new ValidacaoException($"Nenhum registro afetado para o Cargo {CargoId}");
             }
         }
         public Cargo? Obter(int CargoId)

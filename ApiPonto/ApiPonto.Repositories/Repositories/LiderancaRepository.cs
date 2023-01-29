@@ -33,7 +33,7 @@ namespace ApiPonto.Repositories.Repositories
                 cmd.Parameters.AddWithValue("@FuncionarioId", model.FuncionarioId);
                 cmd.Parameters.AddWithValue("@DescricaoEquipe", model.DescricaoEquipe);
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para a Lideranca {model.LiderancaId}");
+                    throw new ValidacaoException($"Nenhum registro afetado para a Lideranca {model.LiderancaId}");
             }
         }
         public bool SeExiste(string LiderancaId)
@@ -73,7 +73,7 @@ namespace ApiPonto.Repositories.Repositories
             {
                 cmd.Parameters.AddWithValue("@LiderancaId", LiderancaId);
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para a Lideranca {LiderancaId}");
+                    throw new ValidacaoException($"Nenhum registro afetado para a Lideranca {LiderancaId}");
             }
         }
         public Lideranca? Obter(int LiderancaId)

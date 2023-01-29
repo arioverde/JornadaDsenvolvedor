@@ -91,7 +91,7 @@ namespace ApiPonto.Services.Services
                 if (model.Justificativa.Trim().Length < 3 || model.Justificativa.Trim().Length > 255)
                     throw new ValidacaoException("A justificativa deve possuir entre 3 e 255 caracteres.");
 
-            if (!(model.FuncionarioId == 0))
+            if ((model.FuncionarioId == 0))
                 throw new ValidacaoException("O identificador do funcionário deve ser informado.");
         }
     }

@@ -23,7 +23,7 @@ namespace ApiPonto.Controllers
                 _service.Inserir(model);
                 return StatusCode(201);
             }
-            catch (ValidadaoException ex)
+            catch (ValidacaoException ex)
             {
                 return StatusCode(400, ex.Message);
             }
@@ -48,7 +48,7 @@ namespace ApiPonto.Controllers
                 return StatusCode(201);
             }
 
-            catch (ValidadaoException ex)
+            catch (ValidacaoException ex)
             {
                 return StatusCode(400, ex.Message);
             }
@@ -66,7 +66,7 @@ namespace ApiPonto.Controllers
                 _service.Deletar(funcionarioId);
                 return StatusCode(200);
             }
-            catch (ValidadaoException ex)
+            catch (ValidacaoException ex)
             {
                 return StatusCode(400, ex.Message);
             }

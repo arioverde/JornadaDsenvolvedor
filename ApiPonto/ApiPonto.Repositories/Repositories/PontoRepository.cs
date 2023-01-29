@@ -21,7 +21,7 @@ namespace ApiPonto.Repositories.Repositories
             {
                 cmd.Parameters.AddWithValue("@PontoId", model.PontoId);
                 cmd.Parameters.AddWithValue("@DataHorarioPonto", model.DataHorarioPonto);
-                cmd.Parameters.AddWithValue("@Justificativa", model.Justificativa);
+                cmd.Parameters.AddWithValue("@Justificativa", model.Justificativa is null ? DBNull.Value : model.Justificativa);
                 cmd.Parameters.AddWithValue("@FuncionarioId", model.FuncionarioId);
                 cmd.ExecuteNonQuery();
             }
@@ -39,7 +39,7 @@ namespace ApiPonto.Repositories.Repositories
                 cmd.Parameters.AddWithValue("@Justificativa", model.Justificativa);
                 cmd.Parameters.AddWithValue("@FuncionarioId", model.FuncionarioId);
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para o Ponto {model.PontoId}");
+                    throw new ValidacaoException($"Nenhum registro afetado para o Ponto {model.PontoId}");
             }
         }
         public bool SeExiste(string PontoId)
@@ -81,7 +81,7 @@ namespace ApiPonto.Repositories.Repositories
             {
                 cmd.Parameters.AddWithValue("@PontoId", PontoId);
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para o Ponto {PontoId}");
+                    throw new ValidacaoException($"Nenhum registro afetado para o Ponto {PontoId}");
             }
         }
         public Ponto? Obter(int PontoId)

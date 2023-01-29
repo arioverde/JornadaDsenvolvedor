@@ -34,7 +34,7 @@ namespace ApiPonto.Repositories.Repositories
                 cmd.Parameters.AddWithValue("@Descricao", model.FuncionarioId);
 
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para a Equipe {model.EquipeId}");
+                    throw new ValidacaoException($"Nenhum registro afetado para a Equipe {model.EquipeId}");
             }
         }
         public bool SeExiste(string EquipeId)
@@ -76,7 +76,7 @@ namespace ApiPonto.Repositories.Repositories
             {
                 cmd.Parameters.AddWithValue("@EquipeId", EquipeId);
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para a Equipe {EquipeId}");
+                    throw new ValidacaoException($"Nenhum registro afetado para a Equipe {EquipeId}");
             }
         }
         public Equipe? Obter(int EquipeId)

@@ -47,7 +47,7 @@ namespace ApiPonto.Repositories.Repositories
                 cmd.Parameters.AddWithValue("@EmailFuncionario", model.EmailFuncionario);
                 cmd.Parameters.AddWithValue("@CargoId", model.CargoId);
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para o Funcionário {model.FuncionarioId}");
+                    throw new ValidacaoException($"Nenhum registro afetado para o Funcionário {model.FuncionarioId}");
             }
         }
         public bool SeExiste(string FuncionarioId)
@@ -100,7 +100,7 @@ namespace ApiPonto.Repositories.Repositories
             {
                 cmd.Parameters.AddWithValue("@FuncionarioId", FuncionarioId);
                 if (cmd.ExecuteNonQuery() == 0)
-                    throw new ValidadaoException($"Nenhum registro afetado para o Funcionário {FuncionarioId}");
+                    throw new ValidacaoException($"Nenhum registro afetado para o Funcionário {FuncionarioId}");
             }
         }
         public Funcionario? Obter(int FuncionarioId)
