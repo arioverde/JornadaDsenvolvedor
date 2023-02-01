@@ -75,4 +75,4 @@ function retirarMascaraCnpj(cnpjMascara) {
     return cnpjMascara.replace(/\./g, '').replace(/\//g, '').replace(/\-/g, '');
 }
 
-// var nivelAcesso = localStorage.getItem('nivelAcesso');
+var nivelAcesso = localStorage.getItem('nivelAcesso');

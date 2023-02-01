@@ -105,5 +105,15 @@ namespace ApiTarefa.Repositories
                 }
             }
         }
+        public bool SeExisteVinculo(string Cnpj)
+        {
+            string comandoSql = @"SELECT COUNT(t.IdentificadorTarefa) FROM Tarefa t
+                                JOIN Empresa e ON t.Cnpj = @Cnpj";
+            using (var cmd = new SqlCommand(comandoSql, _conn))
+            {
+                cmd.Parameters.AddWithValue("@Cnpj", Cnpj);
+                return Convert.ToBoolean(cmd.ExecuteScalar());
+            }
+        }
     }
 }

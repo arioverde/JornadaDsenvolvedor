@@ -3,6 +3,7 @@ using ApiTarefa.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -59,6 +60,10 @@ namespace ApiTarefa.Services
             try
             {
                 _repositorio.AbrirConexao();
+
+                if (_repositorio.SeExisteVinculo(Cnpj))
+                    throw new ValidacaoException("Exclusão não autorizada. Existe tarefas registradas para esta empresa.");
+
                 _repositorio.Deletar(Cnpj);
             }
             finally
@@ -79,11 +84,15 @@ namespace ApiTarefa.Services
                 _repositorio.FecharConexao();
             }
         }
+
         private static void ValidarModel(Empresa model, bool isUpdate = false)
         {
             if (model is null)
                 throw new ValidacaoException("Jason mal formatado ou vazio.");
 
+
+            
+            
             //if (!isUpdate)
             //{
             //    if (string.IsNullOrWhiteSpace(model.Cnpj))
