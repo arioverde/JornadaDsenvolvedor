@@ -1,0 +1,13 @@
+.areaForm {
+    max-width: 450px;
+    margin: 50px auto;
+}
+
+.areaForm .card-body button {
+    width: 200px;
+    margin-top: 4px;
+}
+
+.areaForm .card-body .btnSubmit {
+    text-align: center;
+}

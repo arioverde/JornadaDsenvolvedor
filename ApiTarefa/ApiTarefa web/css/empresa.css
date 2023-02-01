@@ -1,0 +1,9 @@
+.parsley-required {
+    color: red;
+    padding-top: 5px;
+    list-style: none;
+}
+
+.parsley-errors-list {
+    padding: 0;
+}
