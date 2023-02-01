@@ -67,6 +67,8 @@ namespace ApiTarefa.Services
         }
         public void Inserir(Tarefa model)
         {
+
+           
             try
             {
                 ValidarModel(model);

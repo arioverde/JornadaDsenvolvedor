@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiTarefa.Controllers
 {
+    [AllowAnonymous]
     [Authorize(Roles = "2")]
     [ApiController]
     public class EmpresaController : ControllerBase

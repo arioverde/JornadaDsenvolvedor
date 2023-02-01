@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiTarefa.Controllers
 {
+    [AllowAnonymous]
     [Authorize]
     [ApiController]
     public class TarefaController : ControllerBase
@@ -32,6 +33,9 @@ namespace ApiTarefa.Controllers
         [HttpPost("tarefa")]
         public IActionResult Inserir([FromBody] Tarefa model)
         {
+            model.HorarioInicio = DateTime.Now;
+            model.HorarioFim = null;
+
             try
             {
                 _service.Inserir(model);

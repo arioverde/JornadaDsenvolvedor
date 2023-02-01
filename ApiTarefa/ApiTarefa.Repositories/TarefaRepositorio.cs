@@ -17,41 +17,47 @@ namespace ApiTarefa.Repositories
 
         public void Inserir(Tarefa model)
         {
-            string comandoSql = @"INSERT INTO Tarefa (HoraInicio, HoraFim, DescricaoResumida, DescricaoLonga, TipoTarefa) 
+            string comandoSql = @"INSERT INTO Tarefa (HorarioInicio, DescricaoResumida, DescricaoLonga, TipoTarefa, Email, Cnpj) 
                                 VALUES 
-                                (@HoraInicio, @HoraFim, @DescricaoResumida, @DescricaoLonga, @TipoTarefa)";
+                                (@HorarioInicio, @DescricaoResumida, @DescricaoLonga, @TipoTarefa, @Email, @Cnpj)";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
-                cmd.Parameters.AddWithValue("@HoraInicio", model.HoraInicio);
-                cmd.Parameters.AddWithValue("@HoraFim", model.HoraFim);
+                cmd.Parameters.AddWithValue("@HorarioInicio", model.HorarioInicio);
                 cmd.Parameters.AddWithValue("@DescricaoResumida", model.DescricaoResumida);
                 cmd.Parameters.AddWithValue("@DescricaoLonga", model.DescricaoLonga);
                 cmd.Parameters.AddWithValue("@TipoTarefa", model.TipoTarefa);
+                cmd.Parameters.AddWithValue("@Email", model.Email);
+                cmd.Parameters.AddWithValue("@Cnpj", model.Cnpj);
+
                 cmd.ExecuteNonQuery();
             }
         }
         public void Atualizar(Tarefa model)
         {
             string comandoSql = @"UPDATE Tarefa
-                        SET HoraInicio = @HoraInicio, HoraFim = @HoraFim, DescricaoResumida = @DescricaoResumida, DescricaoLonga = @DescricaoLonga, TipoTarefa = @TipoTarefa
+                        SET HorarioInicio = @HorarioInicio, HorarioFim = @HorarioFim, DescricaoResumida = @DescricaoResumida, 
+                            DescricaoLonga = @DescricaoLonga, TipoTarefa = @TipoTarefa, Email = @Email, Cnpj = @Cnpj
                         WHERE IdentificadorTarefa = @IdentificadorTarefa";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
                 cmd.Parameters.AddWithValue("@IdentificadorTarefa", model.IdentificadorTarefa);
-                cmd.Parameters.AddWithValue("@HoraInicio", model.HoraInicio);
-                cmd.Parameters.AddWithValue("@HoraFim", model.HoraFim);
+                cmd.Parameters.AddWithValue("@HorarioInicio", model.HorarioInicio);
+                cmd.Parameters.AddWithValue("@HorarioFim", model.HorarioFim is null ? DBNull.Value :  model.HorarioFim);
                 cmd.Parameters.AddWithValue("@DescricaoResumida", model.DescricaoResumida);
                 cmd.Parameters.AddWithValue("@DescricaoLonga", model.DescricaoLonga);
                 cmd.Parameters.AddWithValue("@TipoTarefa", model.TipoTarefa);
+                cmd.Parameters.AddWithValue("@Email", model.Email);
+                cmd.Parameters.AddWithValue("@Cnpj", model.Cnpj);
                 if (cmd.ExecuteNonQuery() == 0)
                     throw new ValidacaoException($"Nenhum registro afetado para o IdentificadorTarefa {model.IdentificadorTarefa}");
             }
         }
         public List<Tarefa> ListarTarefas()
         {
-            string comandoSql = @"SELECT IdentificadorTarefa, HoraInicio, HoraFim, DescricaoResumida, DescricaoLonga, TipoTarefa FROM Tarefa";
+            string comandoSql = @"SELECT IdentificadorTarefa, HorarioInicio, HorarioFim, DescricaoResumida, 
+                            DescricaoLonga, TipoTarefa, Email, Cnpj FROM Tarefa";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
@@ -62,11 +68,13 @@ namespace ApiTarefa.Repositories
                     {
                         var tarefa = new Tarefa();
                         tarefa.IdentificadorTarefa = Convert.ToInt32(rdr["IdentificadorTarefa"]);
-                        tarefa.HoraInicio = Convert.ToDateTime(rdr["HoraInicio"]);
-                        tarefa.HoraFim = Convert.ToDateTime(rdr["HoraFim"]);
+                        tarefa.HorarioInicio = Convert.ToDateTime(rdr["HorarioInicio"]);
+                        tarefa.HorarioFim = (rdr["HorarioFim"]) == DBNull.Value ? null : Convert.ToDateTime(rdr["HorarioFim"]);
                         tarefa.DescricaoResumida = Convert.ToString(rdr["DescricaoResumida"]);
                         tarefa.DescricaoLonga = Convert.ToString(rdr["DescricaoLonga"]);
                         tarefa.TipoTarefa = (EnumTipoTarefa)(rdr["TipoTarefa"]);
+                        tarefa.Email = Convert.ToString(rdr["Email"]);
+                        tarefa.Cnpj = Convert.ToString(rdr["Cnpj"]);
                         tarefas.Add(tarefa);
                     }
                     return tarefas;
@@ -86,7 +94,8 @@ namespace ApiTarefa.Repositories
         }
         public Tarefa? Obter(int IdentificadorTarefa)
         {
-            string comandoSql = @"SELECT IdentificadorTarefa, HoraInicio, HoraFim, DescricaoResumida, DescricaoLonga, TipoTarefa FROM Tarefa WHERE IdentificadorTarefa = @IdentificadorTarefa";
+            string comandoSql = @"SELECT IdentificadorTarefa, HorarioInicio, HorarioFim, DescricaoResumida, DescricaoLonga, TipoTarefa, Email, Cnpj
+                                FROM Tarefa WHERE IdentificadorTarefa = @IdentificadorTarefa";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
@@ -99,11 +108,13 @@ namespace ApiTarefa.Repositories
                     if (rdr.Read())
                     {
                         tarefa.IdentificadorTarefa = Convert.ToInt32(rdr["IdentificadorTarefa"]);
-                        tarefa.HoraInicio = Convert.ToDateTime(rdr["HoraInicio"]);
-                        tarefa.HoraFim = Convert.ToDateTime(rdr["HoraFim"]);
+                        tarefa.HorarioInicio = Convert.ToDateTime(rdr["HorarioInicio"]);
+                        tarefa.HorarioFim = (rdr["HorarioFim"]) == DBNull.Value ? null : Convert.ToDateTime(rdr["HorarioFim"]);
                         tarefa.DescricaoResumida = Convert.ToString(rdr["DescricaoResumida"]);
                         tarefa.DescricaoLonga = Convert.ToString(rdr["DescricaoLonga"]);
                         tarefa.TipoTarefa = (EnumTipoTarefa)(rdr["TipoTarefa"]);
+                        tarefa.Email = Convert.ToString(rdr["Email"]);
+                        tarefa.Cnpj = Convert.ToString(rdr["Cnpj"]);
                         return tarefa;
                     }
                     else

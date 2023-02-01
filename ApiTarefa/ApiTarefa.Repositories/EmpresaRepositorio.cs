@@ -17,29 +17,27 @@ namespace ApiTarefa.Repositories
 
         public void Inserir(Empresa model)
         {
-            string comandoSql = @"INSERT INTO Empresa (Cnpj, RazaoSocial, DataCadastro) 
+            string comandoSql = @"INSERT INTO Empresa (Cnpj, RazaoSocial) 
                                 VALUES 
-                                (@Cnpj, @RazaoSocial, @DataCadastro)";
+                                (@Cnpj, @RazaoSocial)";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
                 cmd.Parameters.AddWithValue("@Cnpj", model.Cnpj);
                 cmd.Parameters.AddWithValue("@RazaoSocial", model.RazaoSocial);
-                cmd.Parameters.AddWithValue("@DataCadastro", model.DataCadastro);
                 cmd.ExecuteNonQuery();
             }
         }
         public void Atualizar(Empresa model)
         {
             string comandoSql = @"UPDATE Empresa 
-                                SET RazaoSocial = @Cnpj, DataCadastro = @DataCadastro 
+                                SET RazaoSocial = @RazaoSocial
                                 WHERE Cnpj = @Cnpj";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
                 cmd.Parameters.AddWithValue("@Cnpj", model.Cnpj);
                 cmd.Parameters.AddWithValue("@RazaoSocial", model.RazaoSocial);
-                cmd.Parameters.AddWithValue("@DataCadastro", model.DataCadastro);
                 if (cmd.ExecuteNonQuery() == 0)
                     throw new ValidacaoException($"Nenhum registro afetado para o Cnpj {model.Cnpj}");
             }
@@ -49,7 +47,7 @@ namespace ApiTarefa.Repositories
             string comandoSql = @"SELECT Cnpj, RazaoSocial, DataCadastro FROM Empresa";
 
             if (!(string.IsNullOrWhiteSpace(nome)))
-                comandoSql += " WHERE Nome LIKE @nome";
+                comandoSql += " WHERE RazaoSocial LIKE @nome";
 
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
