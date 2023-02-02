@@ -22,5 +22,6 @@ namespace ApiTarefa.Models
         public EnumTipoTarefa TipoTarefa { get; set; }
         public string Email { get; set; }
         public string Cnpj { get; set; }    
+        public string RazaoSocial { get; set; }
     }
 }

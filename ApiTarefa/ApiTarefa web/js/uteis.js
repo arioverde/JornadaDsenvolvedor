@@ -44,15 +44,27 @@ $(document).ready(function () {
 });
 
 function formatarData(dataString) {
+    if (dataString == null) {
+        return "00:00";
+    }
     var dataOriginal = new Date(dataString);
     var dia = adicionaZeroDatas(dataOriginal.getDate().toString());
     var mes = adicionaZeroDatas((dataOriginal.getMonth() + 1).toString());
     var ano = dataOriginal.getFullYear().toString();
-    var dataFormatada = `${dia}/${mes}/${ano}`;
+    var hora = adicionaZeroHora(dataOriginal.getHours().toString());
+    var min = dataOriginal.getMinutes().toString();
+    var dataFormatada = `${dia}/${mes}/${ano} ${hora}:${min}`;
     return dataFormatada;
 }
 
 function adicionaZeroDatas(numero) {
+    if (numero <= 9)
+        return '0' + numero;
+    else
+        return numero;
+}
+
+function adicionaZeroHora(numero) {
     if (numero <= 9)
         return '0' + numero;
     else
@@ -76,3 +88,4 @@ function retirarMascaraCnpj(cnpjMascara) {
 }
 
 var nivelAcesso = localStorage.getItem('nivelAcesso');
+var identificadorTarefaAlterar;

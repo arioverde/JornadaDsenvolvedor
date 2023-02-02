@@ -17,9 +17,9 @@ namespace ApiTarefa.Repositories
 
         public void Inserir(Tarefa model)
         {
-            string comandoSql = @"INSERT INTO Tarefa (HorarioInicio, DescricaoResumida, DescricaoLonga, TipoTarefa, Email, Cnpj) 
+            string comandoSql = @"INSERT INTO Tarefa (HorarioInicio, DescricaoResumida, DescricaoLonga, TipoTarefa, Email, Cnpj, RazaoSocial) 
                                 VALUES 
-                                (@HorarioInicio, @DescricaoResumida, @DescricaoLonga, @TipoTarefa, @Email, @Cnpj)";
+                                (@HorarioInicio, @DescricaoResumida, @DescricaoLonga, @TipoTarefa, @Email, @Cnpj, @RazaoSocial)";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
@@ -29,27 +29,35 @@ namespace ApiTarefa.Repositories
                 cmd.Parameters.AddWithValue("@TipoTarefa", model.TipoTarefa);
                 cmd.Parameters.AddWithValue("@Email", model.Email);
                 cmd.Parameters.AddWithValue("@Cnpj", model.Cnpj);
+                cmd.Parameters.AddWithValue("@RazaoSocial", model.RazaoSocial);
 
                 cmd.ExecuteNonQuery();
             }
         }
         public void Atualizar(Tarefa model)
         {
+            //string comandoSql = @"UPDATE Tarefa
+            //            SET HorarioInicio = @HorarioInicio, HorarioFim = @HorarioFim, DescricaoResumida = @DescricaoResumida, 
+            //                DescricaoLonga = @DescricaoLonga, TipoTarefa = @TipoTarefa, Email = @Email, Cnpj = @Cnpj, RazaoSocial = @RazaoSocial
+            //            WHERE IdentificadorTarefa = @IdentificadorTarefa";
+
             string comandoSql = @"UPDATE Tarefa
-                        SET HorarioInicio = @HorarioInicio, HorarioFim = @HorarioFim, DescricaoResumida = @DescricaoResumida, 
-                            DescricaoLonga = @DescricaoLonga, TipoTarefa = @TipoTarefa, Email = @Email, Cnpj = @Cnpj
+                        SET HorarioFim = @HorarioFim, DescricaoResumida = @DescricaoResumida, 
+                            DescricaoLonga = @DescricaoLonga, TipoTarefa = @TipoTarefa
                         WHERE IdentificadorTarefa = @IdentificadorTarefa";
+
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
                 cmd.Parameters.AddWithValue("@IdentificadorTarefa", model.IdentificadorTarefa);
-                cmd.Parameters.AddWithValue("@HorarioInicio", model.HorarioInicio);
+                //cmd.Parameters.AddWithValue("@HorarioInicio", model.HorarioInicio);
                 cmd.Parameters.AddWithValue("@HorarioFim", model.HorarioFim is null ? DBNull.Value :  model.HorarioFim);
                 cmd.Parameters.AddWithValue("@DescricaoResumida", model.DescricaoResumida);
                 cmd.Parameters.AddWithValue("@DescricaoLonga", model.DescricaoLonga);
                 cmd.Parameters.AddWithValue("@TipoTarefa", model.TipoTarefa);
-                cmd.Parameters.AddWithValue("@Email", model.Email);
-                cmd.Parameters.AddWithValue("@Cnpj", model.Cnpj);
+                //cmd.Parameters.AddWithValue("@Email", model.Email);
+                //cmd.Parameters.AddWithValue("@Cnpj", model.Cnpj);
+                //cmd.Parameters.AddWithValue("@RazaoSocial", model.RazaoSocial);
                 if (cmd.ExecuteNonQuery() == 0)
                     throw new ValidacaoException($"Nenhum registro afetado para o IdentificadorTarefa {model.IdentificadorTarefa}");
             }
@@ -57,7 +65,8 @@ namespace ApiTarefa.Repositories
         public List<Tarefa> ListarTarefas()
         {
             string comandoSql = @"SELECT IdentificadorTarefa, HorarioInicio, HorarioFim, DescricaoResumida, 
-                            DescricaoLonga, TipoTarefa, Email, Cnpj FROM Tarefa";
+                            DescricaoLonga, TipoTarefa, Email, t.Cnpj, e.RazaoSocial FROM Tarefa t
+                            JOIN Empresa e ON t.Cnpj = e.Cnpj;";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
@@ -75,6 +84,7 @@ namespace ApiTarefa.Repositories
                         tarefa.TipoTarefa = (EnumTipoTarefa)(rdr["TipoTarefa"]);
                         tarefa.Email = Convert.ToString(rdr["Email"]);
                         tarefa.Cnpj = Convert.ToString(rdr["Cnpj"]);
+                        tarefa.RazaoSocial = Convert.ToString(rdr["RazaoSocial"]);
                         tarefas.Add(tarefa);
                     }
                     return tarefas;
@@ -94,7 +104,7 @@ namespace ApiTarefa.Repositories
         }
         public Tarefa? Obter(int IdentificadorTarefa)
         {
-            string comandoSql = @"SELECT IdentificadorTarefa, HorarioInicio, HorarioFim, DescricaoResumida, DescricaoLonga, TipoTarefa, Email, Cnpj
+            string comandoSql = @"SELECT IdentificadorTarefa, HorarioInicio, HorarioFim, DescricaoResumida, DescricaoLonga, TipoTarefa, Email, Cnpj, RazaoSocial
                                 FROM Tarefa WHERE IdentificadorTarefa = @IdentificadorTarefa";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
@@ -115,6 +125,7 @@ namespace ApiTarefa.Repositories
                         tarefa.TipoTarefa = (EnumTipoTarefa)(rdr["TipoTarefa"]);
                         tarefa.Email = Convert.ToString(rdr["Email"]);
                         tarefa.Cnpj = Convert.ToString(rdr["Cnpj"]);
+                        tarefa.RazaoSocial = Convert.ToString(rdr["RazaoSocial"]);
                         return tarefa;
                     }
                     else

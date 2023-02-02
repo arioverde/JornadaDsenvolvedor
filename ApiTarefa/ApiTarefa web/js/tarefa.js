@@ -55,12 +55,14 @@ function obterValoresFormulario() {
     var tipoTarefa = parseInt($("#inputTipoTarefa option:selected").val());
     var email = localStorage.getItem('emailUsuario');
     var cnpj = $("#inputCnpj").val();
+    var razaoSocial = $("#inputRazaoSocial").val();
 
     var objeto = {
         descricaoResumida: descricaoResumida,
         descricaoLonga: descricaoLonga,
         tipoTarefa: tipoTarefa,
         email: email,
+        razaoSocial: razaoSocial,
         cnpj: retirarMascaraCnpj(cnpj)
     };
 
