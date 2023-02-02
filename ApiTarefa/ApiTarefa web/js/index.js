@@ -18,7 +18,13 @@ $("#formularioLogin").submit(function (e) {
         dataType: 'json'
     }).done(function (resposta) {
         SalvarDadosLogin(resposta);
-        window.location.href = "empresa.html";
+        if (localStorage.nivelAcesso == 1) {
+            window.location.href = "tarefa.html";
+        }
+        else {
+            window.location.href = "empresa.html";
+        }
+
     }).fail(function (err, errr, errrr) {
         Swal.fire({
             position: 'top-end',
@@ -34,4 +40,5 @@ function SalvarDadosLogin(dadosToken) {
     localStorage.setItem('bearer', dadosToken.bearer);
     localStorage.setItem('nomeUsuario', dadosToken.nomeUsuario);
     localStorage.setItem('nivelAcesso', dadosToken.nivelAcesso);
+    localStorage.setItem('emailUsuario', dadosToken.emailUsuario);
 }

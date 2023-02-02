@@ -12,5 +12,6 @@ namespace ApiTarefa.Models
         public DateTime Validade { get; set; }
         public int NivelAcesso { get; set; }
         public string NomeUsuario { get; set; }
+        public string EmailUsuario { get; set; }
     }
 }

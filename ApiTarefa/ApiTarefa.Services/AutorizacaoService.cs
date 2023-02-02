@@ -50,7 +50,8 @@ namespace ApiTarefa.Services
                 Bearer = stringToken,
                 Validade = tokenDescriptor.Expires.Value,
                 NivelAcesso = usuario.CargoUsuario.GetHashCode(),
-                NomeUsuario = usuario.Nome
+                NomeUsuario = usuario.Nome,
+                EmailUsuario = usuario.Email
             };
         }
 
