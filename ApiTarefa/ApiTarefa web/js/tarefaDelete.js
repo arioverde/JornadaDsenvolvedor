@@ -6,19 +6,19 @@
 // }
 
 $(document).ready(function () {
-    listarEmpresas();
+    listarTarefas();
     $(".preloading").hide();
 });
 
 var urlBaseApi = "https://localhost:44375";
-var tabelaEmpresas;
-function limparCorpoTabelaEmpresas() {
-    var componenteSelecionado = $('#tabelaEmpresas tbody');
+var tabelaTarefas;
+function limparCorpoTabelaTarefas() {
+    var componenteSelecionado = $('#tabelaTarefas tbody');
     componenteSelecionado.html('');
 }
 
-function listarEmpresas() {
-    var rotaApi = "/empresa";
+function listarTarefas() {
+    var rotaApi = "/tarefa";
 
     $.ajax({
         url: urlBaseApi + rotaApi,
@@ -35,14 +35,14 @@ function construirTabela(linhas) {
     var htmlTabela = '';
 
     $(linhas).each(function (index, linha) {
-        var botaoAlterar = '<button class="btn btn-primary btn-sm me-2" onclick="alterar(' + linha.cnpj + ')">Alterar</button>';
-        var botaoExcluir = '<button class="btn btn-danger btn-sm" onclick="excluir(' + linha.cnpj + ')">Excluir</button>';
+        var botaoAlterar = '<button class="btn btn-primary btn-sm me-2" onclick="alterar(' + linha.identificadorTarefa + ')">Alterar</button>';
+        var botaoExcluir = '<button class="btn btn-danger btn-sm" onclick="excluir(' + linha.identificadorTarefa + ')">Excluir</button>';
 
-        htmlTabela = htmlTabela + `<tr><td>${formatarCnpj(linha.cnpj)}</td><td>${linha.razaoSocial}</td><td>${formatarData(linha.dataCadastro)}</td><td>${botaoAlterar + botaoExcluir}</td>/tr>`
+        htmlTabela = htmlTabela + `<tr><td>${linha.identificadorTarefa}</td><td>${linha.horarioInicio}</td><td>${linha.horarioFim}</td><td>${linha.descricaoResumida}</td><td>${linha.descricaoLonga}</td><td>${linha.tipoTarefa}</td><td>${formatarCnpj(linha.cnpj)}<td>${botaoAlterar + botaoExcluir}</td>/tr>`
     });
-    $('#tabelaEmpresas tbody').html(htmlTabela);
-    if (tabelaEmpresas == undefined) {
-        tabelaEmpresas = $('#tabelaEmpresas').DataTable({
+    $('#tabelaTarefas tbody').html(htmlTabela);
+    if (tabelaTarefas == undefined) {
+        tabelaTarefas = $('#tabelaTarefas').DataTable({
             language: {
                 url: 'dist/datatables/i18n.json'
             }
@@ -53,6 +53,8 @@ function construirTabela(linhas) {
 function obterValoresFormulario() {
     var cnpj = $("#inputCnpj").val();
     var razaoSocial = $("#inputRazaoSocial").val();
+    var descricaoResumida = $("#inputDescricaoResumida").val();
+    var descricaoLonga = $("#inputDescricaoLonga").val();
 
     var objeto = {
         cnpj: retirarMascaraCnpj(cnpj),
@@ -63,10 +65,11 @@ function obterValoresFormulario() {
 }
 
 function enviarFormularioParaApi() {
-    var rotaApi = '/empresa';
+    var rotaApi = '/tarefa';
 
     var objeto = obterValoresFormulario();
     var json = JSON.stringify(objeto);
+
     var isEdicao = $("#inputCnpj").is(":disabled");
 
     if (isEdicao) {
@@ -77,11 +80,11 @@ function enviarFormularioParaApi() {
             contentType: 'application/json'
         }).done(function () {
             voltarEstadoInsercaoFormulario();
-            listarEmpresas();
+            listarTarefas();
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
-                title: 'Cliente alterado com sucesso.',
+                title: 'Tarefa alterada com sucesso.',
                 showConfirmButton: false,
                 timer: 1500
             });
@@ -94,11 +97,11 @@ function enviarFormularioParaApi() {
             contentType: 'application/json'
         }).done(function () {
             limparDadosFormulario();
-            listarEmpresas();
+            listarTarefas();
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
-                title: 'Cliente adicionado com sucesso.',
+                title: 'Tarefa adicionada com sucesso.',
                 showConfirmButton: false,
                 timer: 1500
             });
@@ -107,44 +110,44 @@ function enviarFormularioParaApi() {
 }
 
 function limparDadosFormulario() {
-    $('#formEmpresa').trigger("reset");
+    $('#formTarefa').trigger("reset");
 }
 
 function submeterFormulario() {
-    var isValid = $('#formEmpresa').parsley().validate();
+    var isValid = $('#formTarefa').parsley().validate();
     if (isValid)
         enviarFormularioParaApi();
 }
 
-function excluir(cnpj) {
+function excluir(identificadorTarefa) {
     Swal.fire({
-        title: 'Você quer excluir esse cliente?',
+        title: 'Você quer excluir essa tarefa?',
         showDenyButton: true,
         confirmButtonText: 'Sim',
         denyButtonText: `Não`,
     }).then((result) => {
         if (result.isConfirmed) {
-            enviarExclusao(cnpj);
+            enviarExclusao(identificadorTarefa);
         } else if (result.isDenied) {
             Swal.fire('Nada foi alterado.', '', 'info')
         }
     });
 }
 
-function enviarExclusao(cnpj) {
-    var rotaApi = '/empresa/' + cnpj;
+function enviarExclusao(identificadorTarefa) {
+    var rotaApi = '/tarefa/' + identificadorTarefa;
 
     $.ajax({
         url: urlBaseApi + rotaApi,
         method: 'DELETE',
     }).done(function () {
-        listarEmpresas();
-        Swal.fire('Cliente excluido com sucesso.', '', 'success');
+        listarTarefas();
+        Swal.fire('Tarefa excluida com sucesso.', '', 'success');
     });
 }
 
-function alterar(cnpj) {
-    var rotaApi = '/empresa/' + cnpj;
+function alterar(identificadorTarefa) {
+    var rotaApi = '/tarefa/' + identificadorTarefa;
 
     $.ajax({
         url: urlBaseApi + rotaApi,

@@ -6,18 +6,18 @@
 // }
 
 $(document).ready(function () {
-    listarEmpresas();
+    listarTarefas();
     $(".preloading").hide();
 });
 
 var urlBaseApi = "https://localhost:44375";
-var tabelaEmpresas;
-function limparCorpoTabelaEmpresas() {
-    var componenteSelecionado = $('#tabelaEmpresas tbody');
+var tabelaTarefas;
+function limparCorpoTabelaTarefas() {
+    var componenteSelecionado = $('#tabelaTarefas tbody');
     componenteSelecionado.html('');
 }
 
-function listarEmpresas() {
+function listarTarefas() {
     var rotaApi = "/empresa";
 
     $.ajax({
@@ -39,9 +39,9 @@ function construirTabela(linhas) {
 
         htmlTabela = htmlTabela + `<tr><td>${formatarCnpj(linha.cnpj)}</td><td>${linha.razaoSocial}</td><td>${botaoSelecionar}</td>/tr>`
     });
-    $('#tabelaEmpresas tbody').html(htmlTabela);
-    if (tabelaEmpresas == undefined) {
-        tabelaEmpresas = $('#tabelaEmpresas').DataTable({
+    $('#tabelaTarefas tbody').html(htmlTabela);
+    if (tabelaTarefas == undefined) {
+        tabelaTarefas = $('#tabelaTarefas').DataTable({
             language: {
                 url: 'dist/datatables/i18n.json'
             }
@@ -80,7 +80,7 @@ function enviarFormularioParaApi() {
         contentType: 'application/json'
     }).done(function () {
         limparDadosFormulario();
-        listarEmpresas();
+        listarTarefas();
         Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -96,7 +96,7 @@ function limparDadosFormulario() {
 }
 
 // function submeterFormulario() {
-//     var isValid = $('#formEmpresa').parsley().validate();
+//     var isValid = $('#formTarefa').parsley().validate();
 //     if (isValid)
 //         enviarFormularioParaApi();
 // }
@@ -123,7 +123,7 @@ function limparDadosFormulario() {
 //         url: urlBaseApi + rotaApi,
 //         method: 'DELETE',
 //     }).done(function () {
-//         listarEmpresas();
+//         listarTarefas();
 //         Swal.fire('Cliente excluido com sucesso.', '', 'success');
 //     });
 // }
