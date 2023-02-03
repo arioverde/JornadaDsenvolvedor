@@ -80,6 +80,19 @@ namespace ApiTarefa.Services
                 _repositorio.FecharConexao();
             }
         }
+        public void Finalizar(int IdentificadorTarefa)
+        {
+            try
+            {
+                _repositorio.AbrirConexao();
+                _repositorio.Finalizar(IdentificadorTarefa);
+            }
+            finally
+            {
+                _repositorio.FecharConexao();
+            }
+        }
+
         private static void ValidarModel(Tarefa model)
         {
             if (model is null)

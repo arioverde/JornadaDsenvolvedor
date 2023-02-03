@@ -1,10 +1,3 @@
-// ocultarElementos();
-// function ocultarElementos() {
-//     if (nivelAcesso == '1') {
-//         $("#cardCadastroEmpresa").show();
-//     }
-// }
-
 $(document).ready(function () {
     listarTarefas();
     $(".preloading").hide();
@@ -97,42 +90,29 @@ function limparDadosFormulario() {
     $('#formTarefa').trigger("reset");
 }
 
-// function submeterFormulario() {
-//     var isValid = $('#formTarefa').parsley().validate();
-//     if (isValid)
-//         enviarFormularioParaApi();
-// }
-
-// function excluir(cnpj) {
-//     Swal.fire({
-//         title: 'Você quer excluir esse cliente?',
-//         showDenyButton: true,
-//         confirmButtonText: 'Sim',
-//         denyButtonText: `Não`,
-//     }).then((result) => {
-//         if (result.isConfirmed) {
-//             enviarExclusao(cnpj);
-//         } else if (result.isDenied) {
-//             Swal.fire('Nada foi alterado.', '', 'info')
-//         }
-//     });
-// }
-
-// function enviarExclusao(cnpj) {
-//     var rotaApi = '/empresa/' + cnpj;
-
-//     $.ajax({
-//         url: urlBaseApi + rotaApi,
-//         method: 'DELETE',
-//     }).done(function () {
-//         listarTarefas();
-//         Swal.fire('Cliente excluido com sucesso.', '', 'success');
-//     });
-// }
-
 function selecionar(cnpj) {
-    var rotaApi = '/empresa/' + cnpj;
 
+    var rotaApi = '/tarefa';
+    $.ajax({
+        url: urlBaseApi + rotaApi,
+        method: 'GET',
+        dataType: "json"
+    }).done(function (linhas) {
+        $(linhas).each(function (index, linha) {
+
+            if ((linha.email == localStorage.emailUsuario) & (linha.horarioFim == null)) {
+                Swal.fire({
+                    icon: 'infor',
+                    title: 'Oops...',
+                    text: 'Existe tarefa sem finalizar. Você será redirecionado para a página de finalização de tarefas.',
+                }).then((result) => {
+                    window.location.href = "tarefaFinalizar.html";
+                });
+            }
+        });
+    })
+
+    var rotaApi = '/empresa/' + cnpj;
     $.ajax({
         url: urlBaseApi + rotaApi,
         method: 'GET',
@@ -143,23 +123,5 @@ function selecionar(cnpj) {
 
         $("#inputCnpj").prop("disabled", true);
         $("#inputRazaoSocial").prop("disabled", true);
-
     });
 }
-
-// function botaoCancelar() {
-
-//     limparDadosFormulario();
-//     var isEdicao = $("#inputCnpj").is(":disabled");
-
-//     if (isEdicao) {
-//         voltarEstadoInsercaoFormulario();
-//     } else {
-//         limparDadosFormulario();
-//     }
-// }
-
-// function voltarEstadoInsercaoFormulario() {
-//     limparDadosFormulario();
-//     $("#inputCnpj").prop("disabled", false);
-// }

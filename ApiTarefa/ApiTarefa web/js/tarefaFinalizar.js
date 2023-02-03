@@ -1,10 +1,3 @@
-// ocultarElementos();
-// function ocultarElementos() {
-//     if (nivelAcesso == '1') {
-//         $("#cardCadastroEmpresa").show();
-//     }
-// }
-
 $(document).ready(function () {
     listarTarefas();
     $(".preloading").hide();
@@ -35,8 +28,12 @@ function construirTabela(linhas) {
     var htmlTabela = '';
 
     $(linhas).each(function (index, linha) {
-        var botaoAlterar = '<button class="btn btn-primary btn-sm me-2" onclick="alterar(' + linha.identificadorTarefa + ')">Alterar</button>';
-        var botaoExcluir = '<button class="btn btn-danger btn-sm" onclick="excluir(' + linha.identificadorTarefa + ')">Excluir</button>';
+        var botaoFinalizar = '<button class="btn btn-primary btn-sm me-2" onclick="finalizar(' + linha.identificadorTarefa + ')">Finalizar</button>';
+
+        if (linha.email != localStorage.emailUsuario)
+            return;
+        if (linha.horarioFim != null)
+            return;
 
         if (linha.descricaoResumida == 'string')
             linha.descricaoResumida = '';
@@ -49,7 +46,7 @@ function construirTabela(linhas) {
         if (linha.tipoTarefa == 3)
             linha.tipoTarefa = 'Tarefa'
 
-        htmlTabela = htmlTabela + `<tr><td>${linha.identificadorTarefa}</td><td>${formatarData(linha.horarioInicio)}</td><td>${formatarData(linha.horarioFim)}</td><td>${linha.descricaoResumida}</td><td>${linha.descricaoLonga}</td><td>${linha.tipoTarefa}</td><td>${linha.razaoSocial}<td>${botaoAlterar + botaoExcluir}</td>/tr>`
+        htmlTabela = htmlTabela + `<tr><td>${linha.identificadorTarefa}</td><td>${formatarData(linha.horarioInicio)}</td><td>${formatarData(linha.horarioFim)}</td><td>${linha.descricaoResumida}</td><td>${linha.descricaoLonga}</td><td>${linha.tipoTarefa}</td><td>${linha.razaoSocial}<td>${botaoFinalizar}</td>/tr>`
     });
     $('#tabelaTarefas tbody').html(htmlTabela);
     if (tabelaTarefas == undefined) {
@@ -61,139 +58,29 @@ function construirTabela(linhas) {
     }
 }
 
-function obterValoresFormulario() {
-    var cnpj = $("#inputCnpj").val();
-    var razaoSocial = $("#inputRazaoSocial").val();
-    var tipoTarefa = parseInt($("#inputTipoTarefa option:selected").val());
-    var descricaoResumida = $("#inputDescricaoResumida").val();
-    var descricaoLonga = $("#inputDescricaoLonga").val();
-
-    var objeto = {
-        identificadorTarefa: identificadorTarefaAlterar,
-        cnpj: retirarMascaraCnpj(cnpj),
-        razaoSocial: razaoSocial,
-        tipoTarefa: tipoTarefa,
-        descricaoResumida: descricaoResumida,
-        descricaoLonga: descricaoLonga
-    };
-
-    return objeto;
-}
-
-function enviarFormularioParaApi() {
-    var rotaApi = '/tarefa';
-
-    var objeto = obterValoresFormulario();
-    var json = JSON.stringify(objeto);
-
-    var isEdicao = $("#inputCnpj").is(":disabled");
-
-    if (isEdicao) {
-        $.ajax({
-            url: urlBaseApi + rotaApi,
-            method: 'PUT',
-            data: json,
-            contentType: 'application/json'
-        }).done(function () {
-            voltarEstadoInsercaoFormulario();
-            listarTarefas();
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Tarefa alterada com sucesso.',
-                showConfirmButton: false,
-                timer: 1500
-            });
-        });
-    } else {
-        $.ajax({
-            url: urlBaseApi + rotaApi,
-            method: 'POST',
-            data: json,
-            contentType: 'application/json'
-        }).done(function () {
-            limparDadosFormulario();
-            listarTarefas();
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Tarefa adicionada com sucesso.',
-                showConfirmButton: false,
-                timer: 1500
-            });
-        });
-    }
-}
-
-function limparDadosFormulario() {
-    $('#formTarefa').trigger("reset");
-}
-
-// function submeterFormulario() {
-//     var isValid = $('#formTarefa').parsley().validate();
-//     if (isValid)
-//         enviarFormularioParaApi();
-// }
-
-function excluir(identificadorTarefa) {
+function finalizar(identificadorTarefa) {
     Swal.fire({
-        title: 'Você quer excluir essa tarefa?',
+        title: 'Você quer finalizar essa tarefa?',
         showDenyButton: true,
         confirmButtonText: 'Sim',
         denyButtonText: `Não`,
     }).then((result) => {
         if (result.isConfirmed) {
-            enviarExclusao(identificadorTarefa);
+            enviarFinalizacao(identificadorTarefa);
         } else if (result.isDenied) {
             Swal.fire('Nada foi alterado.', '', 'info')
         }
     });
 }
 
-function enviarExclusao(identificadorTarefa) {
+function enviarFinalizacao(identificadorTarefa) {
     var rotaApi = '/tarefa/' + identificadorTarefa;
 
     $.ajax({
         url: urlBaseApi + rotaApi,
-        method: 'DELETE',
+        method: 'PUT',
     }).done(function () {
         listarTarefas();
-        Swal.fire('Tarefa excluida com sucesso.', '', 'success');
+        Swal.fire('Tarefa finalizada com sucesso.', '', 'success');
     });
-}
-
-function alterar(identificadorTarefa) {
-    identificadorTarefaAlterar = identificadorTarefa;
-    var rotaApi = '/tarefa/' + identificadorTarefa;
-
-    $.ajax({
-        url: urlBaseApi + rotaApi,
-        method: 'GET',
-        dataType: "json"
-    }).done(function (resultado) {
-
-        $("#inputCnpj").val(formatarCnpj(resultado.cnpj));
-        $("#inputRazaoSocial").val(resultado.razaoSocial);
-        $("#inputTipoTarefa").val(resultado.tipoTarefa);
-        $("#inputDescricaoResumida").val(resultado.descricaoResumida);
-        $("#inputDescricaoLonga").val(resultado.descricaoLonga);
-        $("#inputCnpj").prop("disabled", true);
-        $("#inputRazaoSocial").prop("disabled", true);
-    });
-}
-
-function botaoCancelar() {
-    var isEdicao = $("#inputCnpj").is(":disabled");
-
-    if (isEdicao) {
-        voltarEstadoInsercaoFormulario();
-    } else {
-        limparDadosFormulario();
-    }
-}
-
-function voltarEstadoInsercaoFormulario() {
-    limparDadosFormulario();
-    $("#inputCnpj").prop("disabled", false);
-    $("#inputRazaoSocial").prop("disabled", false);
 }

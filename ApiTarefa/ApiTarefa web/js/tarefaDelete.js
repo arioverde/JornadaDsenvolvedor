@@ -1,10 +1,3 @@
-// ocultarElementos();
-// function ocultarElementos() {
-//     if (nivelAcesso == '1') {
-//         $("#cardCadastroEmpresa").show();
-//     }
-// }
-
 $(document).ready(function () {
     listarTarefas();
     $(".preloading").hide();
@@ -37,6 +30,9 @@ function construirTabela(linhas) {
     $(linhas).each(function (index, linha) {
         var botaoAlterar = '<button class="btn btn-primary btn-sm me-2" onclick="alterar(' + linha.identificadorTarefa + ')">Alterar</button>';
         var botaoExcluir = '<button class="btn btn-danger btn-sm" onclick="excluir(' + linha.identificadorTarefa + ')">Excluir</button>';
+
+        if (linha.email != localStorage.emailUsuario)
+            return;
 
         if (linha.descricaoResumida == 'string')
             linha.descricaoResumida = '';
@@ -128,12 +124,6 @@ function enviarFormularioParaApi() {
 function limparDadosFormulario() {
     $('#formTarefa').trigger("reset");
 }
-
-// function submeterFormulario() {
-//     var isValid = $('#formTarefa').parsley().validate();
-//     if (isValid)
-//         enviarFormularioParaApi();
-// }
 
 function excluir(identificadorTarefa) {
     Swal.fire({

@@ -36,28 +36,18 @@ namespace ApiTarefa.Repositories
         }
         public void Atualizar(Tarefa model)
         {
-            //string comandoSql = @"UPDATE Tarefa
-            //            SET HorarioInicio = @HorarioInicio, HorarioFim = @HorarioFim, DescricaoResumida = @DescricaoResumida, 
-            //                DescricaoLonga = @DescricaoLonga, TipoTarefa = @TipoTarefa, Email = @Email, Cnpj = @Cnpj, RazaoSocial = @RazaoSocial
-            //            WHERE IdentificadorTarefa = @IdentificadorTarefa";
-
             string comandoSql = @"UPDATE Tarefa
-                        SET HorarioFim = @HorarioFim, DescricaoResumida = @DescricaoResumida, 
-                            DescricaoLonga = @DescricaoLonga, TipoTarefa = @TipoTarefa
-                        WHERE IdentificadorTarefa = @IdentificadorTarefa";
-
+                                SET HorarioFim = @HorarioFim, DescricaoResumida = @DescricaoResumida, 
+                                    DescricaoLonga = @DescricaoLonga, TipoTarefa = @TipoTarefa
+                                WHERE IdentificadorTarefa = @IdentificadorTarefa";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
                 cmd.Parameters.AddWithValue("@IdentificadorTarefa", model.IdentificadorTarefa);
-                //cmd.Parameters.AddWithValue("@HorarioInicio", model.HorarioInicio);
-                cmd.Parameters.AddWithValue("@HorarioFim", model.HorarioFim is null ? DBNull.Value :  model.HorarioFim);
+                cmd.Parameters.AddWithValue("@HorarioFim", model.HorarioFim is null ? DBNull.Value : model.HorarioFim);
                 cmd.Parameters.AddWithValue("@DescricaoResumida", model.DescricaoResumida);
                 cmd.Parameters.AddWithValue("@DescricaoLonga", model.DescricaoLonga);
                 cmd.Parameters.AddWithValue("@TipoTarefa", model.TipoTarefa);
-                //cmd.Parameters.AddWithValue("@Email", model.Email);
-                //cmd.Parameters.AddWithValue("@Cnpj", model.Cnpj);
-                //cmd.Parameters.AddWithValue("@RazaoSocial", model.RazaoSocial);
                 if (cmd.ExecuteNonQuery() == 0)
                     throw new ValidacaoException($"Nenhum registro afetado para o IdentificadorTarefa {model.IdentificadorTarefa}");
             }
@@ -65,8 +55,8 @@ namespace ApiTarefa.Repositories
         public List<Tarefa> ListarTarefas()
         {
             string comandoSql = @"SELECT IdentificadorTarefa, HorarioInicio, HorarioFim, DescricaoResumida, 
-                            DescricaoLonga, TipoTarefa, Email, t.Cnpj, e.RazaoSocial FROM Tarefa t
-                            JOIN Empresa e ON t.Cnpj = e.Cnpj;";
+                                     DescricaoLonga, TipoTarefa, Email, t.Cnpj, e.RazaoSocial FROM Tarefa t
+                                  JOIN Empresa e ON t.Cnpj = e.Cnpj;";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
@@ -104,8 +94,9 @@ namespace ApiTarefa.Repositories
         }
         public Tarefa? Obter(int IdentificadorTarefa)
         {
-            string comandoSql = @"SELECT IdentificadorTarefa, HorarioInicio, HorarioFim, DescricaoResumida, DescricaoLonga, TipoTarefa, Email, Cnpj, RazaoSocial
-                                FROM Tarefa WHERE IdentificadorTarefa = @IdentificadorTarefa";
+            string comandoSql = @"SELECT IdentificadorTarefa, HorarioInicio, HorarioFim, DescricaoResumida, DescricaoLonga, 
+                                    TipoTarefa, Email, Cnpj, RazaoSocial
+                                  FROM Tarefa WHERE IdentificadorTarefa = @IdentificadorTarefa";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
@@ -131,6 +122,20 @@ namespace ApiTarefa.Repositories
                     else
                         return null;
                 }
+            }
+        }
+        public void Finalizar(int IdentificadorTarefa)
+        {
+            string comandoSql = @"UPDATE Tarefa
+                        SET HorarioFim = @HorarioFim
+                        WHERE IdentificadorTarefa = @IdentificadorTarefa";
+
+            using (var cmd = new SqlCommand(comandoSql, _conn))
+            {
+                cmd.Parameters.AddWithValue("@IdentificadorTarefa", IdentificadorTarefa);
+                cmd.Parameters.AddWithValue("@HorarioFim", DateTime.Now);
+                if (cmd.ExecuteNonQuery() == 0)
+                    throw new ValidacaoException($"Nenhum registro finalizado para o IdentificadorTarefa {IdentificadorTarefa}");
             }
         }
     }

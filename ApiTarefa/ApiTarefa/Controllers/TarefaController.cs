@@ -90,5 +90,25 @@ namespace ApiTarefa.Controllers
                 return StatusCode(500, ex.ToString());
             }
         }
+        [Authorize(Roles = "1")]
+        [HttpPut("tarefa/{identificadorTarefa}")]
+        public IActionResult Finalizar([FromRoute] int identificadorTarefa)
+        {
+            try
+            {
+                _service.Finalizar(identificadorTarefa);
+                return StatusCode(201);
+            }
+
+            catch (ValidacaoException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.ToString());
+            }
+        }
+
     }
 }
