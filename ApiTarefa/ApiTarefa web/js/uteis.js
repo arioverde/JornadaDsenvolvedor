@@ -52,7 +52,7 @@ function formatarData(dataString) {
     var mes = adicionaZeroDatas((dataOriginal.getMonth() + 1).toString());
     var ano = dataOriginal.getFullYear().toString();
     var hora = adicionaZeroHora(dataOriginal.getHours().toString());
-    var min = dataOriginal.getMinutes().toString();
+    var min = adicionaZeroDatas(dataOriginal.getMinutes().toString());
     var dataFormatada = `${dia}/${mes}/${ano} ${hora}:${min}`;
     return dataFormatada;
 }
@@ -89,3 +89,4 @@ function retirarMascaraCnpj(cnpjMascara) {
 
 var nivelAcesso = localStorage.getItem('nivelAcesso');
 var identificadorTarefaAlterar;
+var linhasFiltro;

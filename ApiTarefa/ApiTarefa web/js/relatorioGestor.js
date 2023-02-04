@@ -21,23 +21,38 @@ function listarEmpresas() {
 
 function aplicarFiltros() {
 
+    var htmlTabelaFiltro = "";
+    //var filtroTarefas = parseInt($('#selectPeriodoTarefas').val());
+    var filtroCliente = $('#selectCliente :selected').text();
+    var filtroColaborador = $('#selectColaborador :selected').text();
 
+    var tarefasFiltradas = new Array();
 
+    $(linhasFiltro).each(function (index, linhaFiltro) {
+        if (linhaFiltro.razaoSocial == filtroCliente)
+            tarefasFiltradas.push(linhaFiltro)
+        else return;
 
+    });
 
-    //     var data = new Date();
+    $(tarefasFiltradas).each(function (index2, linhaFiltro) {
+        if (linhaFiltro.nomeColaborador != filtroColaborador) {
+            tarefasFiltradas.remove(linhaFiltro)
+        }
+    });
 
-    //     if (parseInt($('#selectPeriodoTarefas').val()) == 1) {
-    //         periodoTarefas = data;
-    //     }
+    $(tarefasFiltradas).each(function (index3, linhaFiltro) {
+        htmlTabelaFiltro = htmlTabelaFiltro + `<tr><td>${tarefasFiltradas.identificadorTarefa}</td><td>${formatarData(tarefasFiltradas.horarioInicio)}</td><td>${formatarData(linhaFiltro.horarioFim)}</td><td>${linhaFiltro.descricaoResumida}</td><td>${linhaFiltro.descricaoLonga}</td><td>${linhaFiltro.tipoTarefa}</td><td>${linhaFiltro.razaoSocial}</td><td>${linhaFiltro.nomeColaborador}</td></tr>`
+    });
 
-    //     if (parseInt($('#selectPeriodoTarefas').val()) == 3) {
-    //         periodoTarefas = data;
-    //     }
-
-    //     var periodoTarefas = parseInt($('#selectPeriodoTarefas').val());
-    //     var cliente = $('#selectCliente :selected').text();
-    //     var colaborador = $('#selectColaborador :selected').text();
+    $('#tabelaTarefas tbody').html(htmlTabelaFiltro);
+    if (tabelaTarefas == undefined) {
+        tabelaTarefas = $('#tabelaTarefas').DataTable({
+            language: {
+                url: 'dist/datatables/i18n.json'
+            }
+        });
+    }
 }
 
 function popularSelectEmpresas(empresas) {
@@ -58,6 +73,8 @@ function listarTarefas() {
         method: 'GET',
         dataType: "json"
     }).done(function (resultado) {
+        // var global para uso nos filtros
+        linhasFiltro = resultado;
         construirTabela(resultado);
     }).fail(function (err, errr, errrr) {
     });
