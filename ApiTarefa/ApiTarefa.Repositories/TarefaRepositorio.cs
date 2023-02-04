@@ -55,8 +55,9 @@ namespace ApiTarefa.Repositories
         public List<Tarefa> ListarTarefas()
         {
             string comandoSql = @"SELECT IdentificadorTarefa, HorarioInicio, HorarioFim, DescricaoResumida, 
-                                     DescricaoLonga, TipoTarefa, Email, t.Cnpj, e.RazaoSocial FROM Tarefa t
-                                  JOIN Empresa e ON t.Cnpj = e.Cnpj;";
+                                     DescricaoLonga, TipoTarefa, t.Email, t.Cnpj, e.RazaoSocial, Nome FROM Tarefa t
+                                  JOIN Empresa e ON t.Cnpj = e.Cnpj
+								  JOIN Usuario u ON t.Email = u.Email";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {
@@ -75,6 +76,7 @@ namespace ApiTarefa.Repositories
                         tarefa.Email = Convert.ToString(rdr["Email"]);
                         tarefa.Cnpj = Convert.ToString(rdr["Cnpj"]);
                         tarefa.RazaoSocial = Convert.ToString(rdr["RazaoSocial"]);
+                        tarefa.NomeColaborador = Convert.ToString(rdr["Nome"]);
                         tarefas.Add(tarefa);
                     }
                     return tarefas;
