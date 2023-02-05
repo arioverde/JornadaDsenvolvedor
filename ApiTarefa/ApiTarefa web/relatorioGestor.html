@@ -48,22 +48,22 @@
             </div>
 
             <select class="form-select" id="selectPeriodoTarefas">
-                <option selected>Selecione o período das Tarefas</option>
+                <option value="0">Selecione o período das Tarefas</option>
                 <option value="1">Tarefas do dia</option>
                 <option value="2">Tarefas da semana</option>
                 <option value="3">Tarefas do mês</option>
             </select>
 
             <select class="form-select" id="selectCliente">
-                <option selected>Selecione o Cliente</option>
+                <option value="">Selecione o Cliente</option>
             </select>
 
             <select class="form-select" id="selectColaborador">
-                <option selected>Selecione o Colaborador</option>
+                <option value="">Selecione o Colaborador</option>
             </select>
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="aplicarFiltros()">Aplicar Filtros</button>
+        <button type="button" class="btn btn-primary" onclick="enviarFormularioParaApi()">Aplicar Filtros</button>
 
         <div class="card mt-5">
             <div class="card-body">

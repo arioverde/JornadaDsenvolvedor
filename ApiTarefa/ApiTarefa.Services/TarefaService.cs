@@ -1,5 +1,6 @@
 ﻿using ApiTarefa.Models;
 using ApiTarefa.Repositories;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,18 +16,30 @@ namespace ApiTarefa.Services
         {
             _repositorio = repositorio;
         }
-        public List<Tarefa> ListarTarefas()
+        public List<Tarefa> ListarTarefas(int tarefasPorPeriodo, string razaoSocial, string nomeColaborador)
         {
             try
             {
                 _repositorio.AbrirConexao();
-                return _repositorio.ListarTarefas();
+
+                if (tarefasPorPeriodo == 0)
+                {
+                    if (razaoSocial is null && nomeColaborador is null)
+                    {
+                        return _repositorio.ListarTarefas();
+                    }
+                }
+
+                var tarefasFiltradas = AplicarFiltros(tarefasPorPeriodo, razaoSocial, nomeColaborador);
+                return tarefasFiltradas;
             }
+
             finally
             {
                 _repositorio.FecharConexao();
             }
         }
+
         public Tarefa? Obter(int IdentificadorTarefa)
         {
             try
@@ -68,7 +81,7 @@ namespace ApiTarefa.Services
         public void Inserir(Tarefa model)
         {
 
-           
+
             try
             {
                 ValidarModel(model);
@@ -105,6 +118,80 @@ namespace ApiTarefa.Services
             //    throw new ValidacaoException("A razão social deve possuir entre 3 e 255 caracteres.");
 
             //model.RazaoSocial = model.RazaoSocial.Trim();
+        }
+        public List<Tarefa> AplicarFiltros(int tarefasPorPeriodo, string razaoSocial, string nomeColaborador)
+        {
+            List<Tarefa> listaAuxiliar = new List<Tarefa>();
+            var tarefasFiltradas = _repositorio.ListarTarefas();
+
+            if (tarefasPorPeriodo != 0)
+            {
+                if (tarefasPorPeriodo == 1)
+                {
+                    foreach (var tarefa in tarefasFiltradas)
+                    {
+                        if (tarefa.HorarioInicio.Day == DateTime.Now.Day && tarefa.HorarioInicio.Month == DateTime.Now.Month)
+                            listaAuxiliar.Add(tarefa);
+                    }
+                }
+
+                if (tarefasPorPeriodo == 2)
+                {
+                    //foreach (var tarefa in tarefasFiltradas)
+                    //{
+                    //    if (tarefa.HorarioInicio.Month == DateTime.Now.Month && tarefa.HorarioInicio.Year == DateTime.Now.Year)
+                    //        listaAuxiliar.Add(tarefa);
+                    //}
+                }
+
+                if (tarefasPorPeriodo == 3)
+                {
+                    foreach (var tarefa in tarefasFiltradas)
+                    {
+                        if (tarefa.HorarioInicio.Month == DateTime.Now.Month && tarefa.HorarioInicio.Year == DateTime.Now.Year)
+                            listaAuxiliar.Add(tarefa);
+                    }
+                }
+
+                tarefasFiltradas = listaAuxiliar;
+            }
+
+            if (razaoSocial != null)
+            {
+
+                foreach (var tarefa in tarefasFiltradas.ToList())
+                {
+                    if (tarefa.RazaoSocial == razaoSocial)
+                        continue;
+                    else
+                        tarefasFiltradas.Remove(tarefa);
+                }
+            }
+
+            if (nomeColaborador != null)
+            {
+                foreach (var tarefa in tarefasFiltradas.ToList())
+                {
+                    if (tarefa.NomeColaborador == nomeColaborador)
+                        continue;
+                    else
+                        tarefasFiltradas.Remove(tarefa);
+                }
+            }
+
+            CalcularTempoTarefa(tarefasFiltradas);
+            return tarefasFiltradas;
+        }
+        private List<Tarefa> CalcularTempoTarefa(List<Tarefa> tarefasFiltradas)
+        {
+            foreach (var tarefa in tarefasFiltradas)
+            {
+                if (tarefa.HorarioFim == null)
+                    tarefa.HorarioFim = DateTime.Now;
+
+                tarefa.TempoTarefa = Convert.ToDateTime(tarefa.HorarioFim) - tarefa.HorarioInicio;
+            }
+            return tarefasFiltradas;
         }
     }
 }

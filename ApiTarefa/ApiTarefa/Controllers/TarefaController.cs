@@ -18,9 +18,9 @@ namespace ApiTarefa.Controllers
         }
 
         [HttpGet("tarefa")]
-        public IActionResult Listar()
+        public IActionResult Listar([FromQuery] int tarefasPorPeriodo, string? razaoSocial, string? nomeColaborador)
         {
-            return StatusCode(200, _service.ListarTarefas());
+            return StatusCode(200, _service.ListarTarefas(tarefasPorPeriodo, razaoSocial, nomeColaborador));
         }
 
         [HttpGet("tarefa/{identificadorTarefa}")]

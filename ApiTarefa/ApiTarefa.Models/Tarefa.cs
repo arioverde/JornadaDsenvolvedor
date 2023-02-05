@@ -17,6 +17,7 @@ namespace ApiTarefa.Models
         public int IdentificadorTarefa { get; set; }
         public DateTime HorarioInicio { get; set; }
         public DateTime? HorarioFim { get; set; }
+        public TimeSpan TempoTarefa { get; set; }
         public string DescricaoResumida { get; set; }
         public string DescricaoLonga { get; set; }
         public EnumTipoTarefa TipoTarefa { get; set; }

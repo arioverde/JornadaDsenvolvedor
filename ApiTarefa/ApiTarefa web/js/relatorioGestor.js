@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    listarTarefas();
+    //listarTarefas();
     listarEmpresas();
     $(".preloading").hide();
 });
@@ -19,51 +19,79 @@ function listarEmpresas() {
     });
 }
 
-function aplicarFiltros() {
+// function aplicarFiltros() {
 
-    var htmlTabelaFiltro = "";
-    //var filtroTarefas = parseInt($('#selectPeriodoTarefas').val());
-    var filtroCliente = $('#selectCliente :selected').text();
-    var filtroColaborador = $('#selectColaborador :selected').text();
+//     var htmlTabelaFiltro = "";
+//     //var filtroTarefas = parseInt($('#selectPeriodoTarefas').val());
+//     var filtroCliente = $('#selectCliente :selected').text();
+//     var filtroColaborador = $('#selectColaborador :selected').text();
 
-    var tarefasFiltradas = new Array();
+//     var tarefasFiltradas = new Array();
 
-    $(linhasFiltro).each(function (index, linhaFiltro) {
-        if (linhaFiltro.razaoSocial == filtroCliente)
-            tarefasFiltradas.push(linhaFiltro)
-        else return;
+//     $(linhasFiltro).each(function (index, linhaFiltro) {
+//         if (linhaFiltro.razaoSocial == filtroCliente)
+//             tarefasFiltradas.push(linhaFiltro)
+//         else return;
 
-    });
+//     });
 
-    $(tarefasFiltradas).each(function (index2, linhaFiltro) {
-        if (linhaFiltro.nomeColaborador != filtroColaborador) {
-            tarefasFiltradas.remove(linhaFiltro)
-        }
-    });
+//     $(tarefasFiltradas).each(function (index2, linhaFiltro) {
+//         if (linhaFiltro.nomeColaborador != filtroColaborador) {
+//             tarefasFiltradas.remove(linhaFiltro)
+//         }
+//     });
 
-    $(tarefasFiltradas).each(function (index3, linhaFiltro) {
-        htmlTabelaFiltro = htmlTabelaFiltro + `<tr><td>${tarefasFiltradas.identificadorTarefa}</td><td>${formatarData(tarefasFiltradas.horarioInicio)}</td><td>${formatarData(linhaFiltro.horarioFim)}</td><td>${linhaFiltro.descricaoResumida}</td><td>${linhaFiltro.descricaoLonga}</td><td>${linhaFiltro.tipoTarefa}</td><td>${linhaFiltro.razaoSocial}</td><td>${linhaFiltro.nomeColaborador}</td></tr>`
-    });
+//     $(tarefasFiltradas).each(function (index3, linhaFiltro) {
+//         htmlTabelaFiltro = htmlTabelaFiltro + `<tr><td>${tarefasFiltradas.identificadorTarefa}</td><td>${formatarData(tarefasFiltradas.horarioInicio)}</td><td>${formatarData(linhaFiltro.horarioFim)}</td><td>${linhaFiltro.descricaoResumida}</td><td>${linhaFiltro.descricaoLonga}</td><td>${linhaFiltro.tipoTarefa}</td><td>${linhaFiltro.razaoSocial}</td><td>${linhaFiltro.nomeColaborador}</td></tr>`
+//     });
 
-    $('#tabelaTarefas tbody').html(htmlTabelaFiltro);
-    if (tabelaTarefas == undefined) {
-        tabelaTarefas = $('#tabelaTarefas').DataTable({
-            language: {
-                url: 'dist/datatables/i18n.json'
-            }
-        });
-    }
+//     $('#tabelaTarefas tbody').html(htmlTabelaFiltro);
+//     if (tabelaTarefas == undefined) {
+//         tabelaTarefas = $('#tabelaTarefas').DataTable({
+//             language: {
+//                 url: 'dist/datatables/i18n.json'
+//             }
+//         });
+//     }
+// }
+
+function obterValoresFormulario() {
+    var filtroTarefas = parseInt($('#selectPeriodoTarefas').val());
+
+    var filtroCliente = $('#selectCliente').val();
+    if (filtroCliente != "")
+        filtroCliente = $('#selectCliente :selected').text();
+
+    var filtroColaborador = $('#selectCliente').val();
+    if (filtroColaborador != "")
+        filtroColaborador = $('#selectColaborador :selected').text();
+
+    var objeto = {
+        tarefasPorPeriodo: filtroTarefas,
+        razaoSocial: filtroCliente,
+        nomeColaborador: filtroColaborador,
+    };
+
+    return objeto;
 }
 
-function popularSelectEmpresas(empresas) {
+function enviarFormularioParaApi() {
+    var rotaApi = '/tarefa';
 
-    if (empresas != null) {
-        var selectbox = $('#selectCliente');
-        $.each(empresas, function (i, d) {
-            $('<option>').text(d.razaoSocial).appendTo(selectbox);
-        });
-    }
+    var objeto = obterValoresFormulario();
+    var json = JSON.stringify(objeto);
+
+    $.ajax({
+        url: urlBaseApi + rotaApi,
+        method: 'GET',
+        data: json,
+        contentType: 'application/json'
+    }).done(function (resultado) {
+        construirTabela(resultado);
+    }).fail(function (err, errr, errrr) {
+    });
 }
+
 
 function listarTarefas() {
     var rotaApi = "/tarefa";
@@ -74,7 +102,7 @@ function listarTarefas() {
         dataType: "json"
     }).done(function (resultado) {
         // var global para uso nos filtros
-        linhasFiltro = resultado;
+        // linhasFiltro = resultado;
         construirTabela(resultado);
     }).fail(function (err, errr, errrr) {
     });
@@ -117,6 +145,16 @@ function construirTabela(linhas) {
     }
 
     popularSelectColaboradores(nomeColaboradores)
+}
+
+function popularSelectEmpresas(empresas) {
+
+    if (empresas != null) {
+        var selectbox = $('#selectCliente');
+        $.each(empresas, function (i, d) {
+            $('<option>').text(d.razaoSocial).appendTo(selectbox);
+        });
+    }
 }
 
 function popularSelectColaboradores(nomeColaboradores) {
