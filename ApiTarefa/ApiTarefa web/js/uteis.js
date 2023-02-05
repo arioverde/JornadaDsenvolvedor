@@ -89,4 +89,3 @@ function retirarMascaraCnpj(cnpjMascara) {
 
 var nivelAcesso = localStorage.getItem('nivelAcesso');
 var identificadorTarefaAlterar;
-var linhasFiltro;

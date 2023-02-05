@@ -110,14 +110,6 @@ namespace ApiTarefa.Services
         {
             if (model is null)
                 throw new ValidacaoException("Jason mal formatado ou vazio.");
-
-            //if (string.IsNullOrWhiteSpace(model.RazaoSocial))
-            //    throw new ValidacaoException("A razão social é obrigatória.");
-
-            //if (model.RazaoSocial.Trim().Length < 3 || model.RazaoSocial.Trim().Length > 255)
-            //    throw new ValidacaoException("A razão social deve possuir entre 3 e 255 caracteres.");
-
-            //model.RazaoSocial = model.RazaoSocial.Trim();
         }
         public List<Tarefa> AplicarFiltros(int tarefasPorPeriodo, string razaoSocial, string nomeColaborador)
         {
@@ -189,10 +181,24 @@ namespace ApiTarefa.Services
                 if (tarefa.HorarioFim == null)
                     tarefa.HorarioFim = DateTime.Now;
 
-                tarefa.TempoTarefa = Convert.ToDateTime(tarefa.HorarioFim) - tarefa.HorarioInicio;
+                tarefa.TempoTarefa = (TimeSpan)(tarefa.HorarioFim - tarefa.HorarioInicio);
             }
+
+            // SomarTotalHoras(tarefasFiltradas);
             return tarefasFiltradas;
+
         }
+        //private List<Tarefa> SomarTotalHoras(List<Tarefa> tarefasFiltradas)
+        //{
+        //    TimeSpan totalHoras = new TimeSpan();
+
+        //    foreach (var tarefa in tarefasFiltradas)
+        //    {
+        //        totalHoras += tarefa.TempoTarefa;
+        //    }
+
+        //    return tarefasFiltradas;
+        //}
     }
 }
 
