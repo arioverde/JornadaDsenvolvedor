@@ -44,7 +44,7 @@ namespace ApiTarefa.Repositories
         }
         public List<Empresa> ListarEmpresas(string? nome)
         {
-            string comandoSql = @"SELECT Cnpj, RazaoSocial, DataCadastro FROM Empresa";
+            string comandoSql = @"SELECT Cnpj, RazaoSocial, DataCadastro FROM Empresa ORDER BY RazaoSocial";
 
             if (!(string.IsNullOrWhiteSpace(nome)))
                 comandoSql += " WHERE RazaoSocial LIKE @nome";

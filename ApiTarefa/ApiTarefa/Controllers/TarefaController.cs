@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApiTarefa.Controllers
 {
     [AllowAnonymous]
-    [Authorize]
     [ApiController]
     public class TarefaController : ControllerBase
     {
@@ -23,6 +22,7 @@ namespace ApiTarefa.Controllers
             return StatusCode(200, _service.ListarTarefas(tarefasPorPeriodo, razaoSocial, nomeColaborador));
         }
 
+        [Authorize(Roles = "1")]
         [HttpGet("tarefa/{identificadorTarefa}")]
         public IActionResult Obter([FromRoute] int identificadorTarefa)
         {

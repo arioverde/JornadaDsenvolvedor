@@ -57,7 +57,8 @@ namespace ApiTarefa.Repositories
             string comandoSql = @"SELECT IdentificadorTarefa, HorarioInicio, HorarioFim, DescricaoResumida, 
                                      DescricaoLonga, TipoTarefa, t.Email, t.Cnpj, e.RazaoSocial, Nome FROM Tarefa t
                                   JOIN Empresa e ON t.Cnpj = e.Cnpj
-								  JOIN Usuario u ON t.Email = u.Email";
+								  JOIN Usuario u ON t.Email = u.Email
+                                  ORDER BY e.RazaoSocial";
 
             using (var cmd = new SqlCommand(comandoSql, _conn))
             {

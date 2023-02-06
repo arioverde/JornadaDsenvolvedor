@@ -1,10 +1,3 @@
-// ocultarElementos();
-// function ocultarElementos() {
-//     if (nivelAcesso == '1') {
-//         $("#cardCadastroEmpresa").show();
-//     }
-// }
-
 $(document).ready(function () {
     listarEmpresas();
     $(".preloading").hide();

@@ -46,7 +46,7 @@ namespace ApiTarefa.Services
         {
             try
             {
-                ValidarModel(model, true);
+                ValidarModel(model);
                 _repositorio.AbrirConexao();
                 _repositorio.Atualizar(model);
             }
@@ -85,33 +85,12 @@ namespace ApiTarefa.Services
             }
         }
 
-        private static void ValidarModel(Empresa model, bool isUpdate = false)
+        private static void ValidarModel(Empresa model)
         {
             if (model is null)
                 throw new ValidacaoException("Jason mal formatado ou vazio.");
 
-
-            
-            
-            //if (!isUpdate)
-            //{
-            //    if (string.IsNullOrWhiteSpace(model.Cnpj))
-            //        throw new ValidacaoException("O Cnpj da empresa é obrigatório.");
-
-            //    if (!(long.TryParse(model.Cnpj, out _) && model.Cnpj.Trim().Length == 14))
-            //        throw new ValidacaoException("O Cnpj deve conter 14 números sem máscara.");
-
-            //    //if (!(ValidarCnpJ(model.Cnpj)))
-            //    //    throw new ValidacaoException("O Cnpj da empresa é inválido.");
-            //}
-
-            //if (string.IsNullOrWhiteSpace(model.RazaoSocial))
-            //    throw new ValidacaoException("A razão social é obrigatória.");
-
-            //if (model.RazaoSocial.Trim().Length < 3 || model.RazaoSocial.Trim().Length > 255)
-            //    throw new ValidacaoException("A razão social deve possuir entre 3 e 255 caracteres.");
-
-            //model.RazaoSocial = model.RazaoSocial.Trim();
+            model.RazaoSocial = model.RazaoSocial.Trim();
         }
     }
 }

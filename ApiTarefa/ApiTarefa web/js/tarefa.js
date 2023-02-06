@@ -1,6 +1,8 @@
 $(document).ready(function () {
-    listarTarefas();
+    listarEmpresas();
     $(".preloading").hide();
+
+
 });
 
 var urlBaseApi = "https://localhost:44375";
@@ -10,7 +12,7 @@ function limparCorpoTabelaTarefas() {
     componenteSelecionado.html('');
 }
 
-function listarTarefas() {
+function listarEmpresas() {
     var rotaApi = "/empresa";
 
     $.ajax({
@@ -32,6 +34,7 @@ function construirTabela(linhas) {
 
         htmlTabela = htmlTabela + `<tr><td>${formatarCnpj(linha.cnpj)}</td><td>${linha.razaoSocial}</td><td>${botaoSelecionar}</td>/tr>`
     });
+
     $('#tabelaTarefas tbody').html(htmlTabela);
     if (tabelaTarefas == undefined) {
         tabelaTarefas = $('#tabelaTarefas').DataTable({
